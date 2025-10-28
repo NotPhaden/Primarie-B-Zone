@@ -1,0 +1,166 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SAS — Manager Echipă</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    :root{
+      --bg:#0b1622;
+      --accent:#4cc2ff;
+      --card-bg: rgba(255,255,255,0.05);
+      --modal-bg:#ffffff;
+      --modal-text:#222;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      font-family: Arial, sans-serif;
+      background:var(--bg);
+      color:#fff;
+      margin:0;
+    }
+
+    .header{display:flex;align-items:center;gap:20px;padding:30px 60px}
+    .header img{width:80px;height:80px;object-fit:cover;border-radius:8px}
+    .header-text h2{margin:0;font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
+    .header-text h1{margin:5px 0 0;font-size:32px;color:#fff}
+
+    .controls{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+    .controls input{flex:1 1 260px;padding:10px;border-radius:8px;border:none;font-size:14px}
+    .controls button{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-size:14px;transition:background .18s}
+    .controls button:hover{background:#38a2d7}
+
+    .container{max-width:1200px;margin:20px auto;padding:0 20px}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:16px}
+
+    .card{background:var(--card-bg);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,0.6);transition:transform .22s, box-shadow .22s}
+    .card:hover{transform:translateY(-5px);box-shadow:0 10px 24px rgba(0,0,0,0.7)}
+    .card h2{margin:0 0 8px;color:var(--accent);font-size:18px}
+    .card p{margin:0;color:#d6d6d6;font-size:13px;line-height:1.4}
+
+    .add-member, .add-team{background:var(--card-bg);padding:20px;border-radius:12px;margin-top:20px}
+    .add-member h3, .add-team h3{margin-top:0;color:var(--accent)}
+    .add-member input, .add-team input, .add-team textarea{
+      width:100%;padding:10px;border-radius:8px;border:none;margin:8px 0;background:rgba(255,255,255,0.08);color:#fff;
+    }
+
+    .team-card{border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:10px;margin-bottom:10px}
+    .team-card h4{margin:0 0 6px;color:#4cc2ff}
+    .tag{display:inline-block;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,0.04);font-size:12px;color:#cfeeff;margin-right:6px}
+
+    @media(max-width:720px){
+      .header{padding:18px}
+      .header-text h1{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="logo.png" alt="SAS Logo" />
+    <div class="header-text">
+      <h2>Manager Intern</h2>
+      <h1>SAS — ECHIPE & MEMBRI</h1>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input id="searchInput" type="text" placeholder="Caută după call-sign sau rol..." />
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <div class="container">
+    <div class="add-member">
+      <h3>➕ Adaugă Membru SAS</h3>
+      <input type="text" id="callSign" placeholder="Call-sign (ex: S4)" />
+      <input type="text" id="skills" placeholder="Abilități / Rol (ex: Pilot, Marksman, Explosivist)" />
+      <button id="addMemberBtn">Adaugă Membru</button>
+    </div>
+
+    <div class="grid" id="memberGrid"></div>
+
+    <div class="add-team">
+      <h3>🚔 Adaugă Echipă de Patrulă / Rază</h3>
+      <input type="text" id="teamName" placeholder="Nume echipă (ex: RAZIE 1, Patrula A, etc.)" />
+      <textarea id="teamMembers" rows="3" placeholder="Membri (ex: S2, S4, S6)"></textarea>
+      <button id="addTeamBtn">Adaugă Echipă</button>
+    </div>
+
+    <div id="teamList"></div>
+  </div>
+
+  <script>
+    const memberGrid = document.getElementById('memberGrid');
+    const teamList = document.getElementById('teamList');
+
+    function getData(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
+    function saveData(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
+
+    function renderMembers(){
+      const data = getData('sas_members');
+      memberGrid.innerHTML = '';
+      if(data.length===0){ memberGrid.innerHTML='<p style="opacity:0.6">Niciun membru adăugat încă.</p>'; return;}
+      data.forEach(m=>{
+        const card = document.createElement('div');
+        card.className='card';
+        card.innerHTML = `<h2>${m.call}</h2><p>${m.skills}</p>`;
+        memberGrid.appendChild(card);
+      });
+    }
+
+    function renderTeams(){
+      const teams = getData('sas_teams');
+      teamList.innerHTML='';
+      if(teams.length===0){ teamList.innerHTML='<p style="opacity:0.6">Nicio echipă adăugată încă.</p>'; return;}
+      teams.forEach(t=>{
+        const div=document.createElement('div');
+        div.className='team-card';
+        div.innerHTML=`<h4>${t.name}</h4><p><strong>Membri:</strong> ${t.members}</p>`;
+        teamList.appendChild(div);
+      });
+    }
+
+    document.getElementById('addMemberBtn').addEventListener('click',()=>{
+      const call = document.getElementById('callSign').value.trim();
+      const skills = document.getElementById('skills').value.trim();
+      if(!call || !skills) return alert('Completează toate câmpurile!');
+      const data=getData('sas_members');
+      data.push({call, skills});
+      saveData('sas_members', data);
+      renderMembers();
+      document.getElementById('callSign').value='';
+      document.getElementById('skills').value='';
+    });
+
+    document.getElementById('addTeamBtn').addEventListener('click',()=>{
+      const name=document.getElementById('teamName').value.trim();
+      const members=document.getElementById('teamMembers').value.trim();
+      if(!name || !members) return alert('Completează toate câmpurile!');
+      const teams=getData('sas_teams');
+      teams.push({name, members});
+      saveData('sas_teams', teams);
+      renderTeams();
+      document.getElementById('teamName').value='';
+      document.getElementById('teamMembers').value='';
+    });
+
+    document.getElementById('searchInput').addEventListener('input',function(){
+      const q=this.value.toLowerCase();
+      document.querySelectorAll('.card').forEach(card=>{
+        const text=card.innerText.toLowerCase();
+        card.style.display=text.includes(q)?'block':'none';
+      });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      localStorage.removeItem('sas_members');
+      localStorage.removeItem('sas_teams');
+      renderMembers();
+      renderTeams();
+    });
+
+    renderMembers();
+    renderTeams();
+  </script>
+</body>
+
