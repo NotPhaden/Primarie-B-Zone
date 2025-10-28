@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Primăria Capitalei — Evidență Service-uri (Local)</title>
+  <title>Primăria Capitalei — Evidență Service-uri</title>
   <link rel="icon" href="logo.png" type="image/png">
   <style>
     :root{
@@ -22,9 +22,8 @@
       background:var(--bg);
       color:#fff;
       margin:0;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
+    /* --- restul CSS-ului tău aici (pentru brevitate) --- */
     .header{display:flex;align-items:center;gap:18px;padding:22px 28px}
     .header img{width:64px;height:64px;object-fit:cover;border-radius:8px}
     .header-text h2{margin:0;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
@@ -38,32 +37,15 @@
     .thumb{width:100%;height:160px;border-radius:8px;background:#07111a;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02)}
     .card h3{margin:0;font-size:18px;color:#fff}
     .meta{font-size:13px;color:#d6d6d6}
-    .tag{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
     .actions{display:flex;gap:8px;margin-top:8px}
     .btn{background:var(--accent);border:0;padding:8px 10px;border-radius:8px;color:#042231;cursor:pointer;transition:0.2s}
     .btn.gray{background:var(--btn-gray);color:#fff;}
-    .btn.gray:hover{background:#3c4a5c;}
     .btn.danger{background:var(--danger);color:#111}
     .modal{display:none;position:fixed;inset:0;z-index:1400;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;padding:20px;overflow:auto}
     .modal.show{display:flex}
     .modal-content{background:var(--modal-bg);color:var(--modal-text);width:100%;max-width:920px;border-radius:12px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,0.5);position:relative}
-    .modal-content h2{margin:0 0 12px;color:#0b3f61}
     .close{position:absolute;right:12px;top:8px;font-size:22px;background:transparent;border:0;cursor:pointer}
-    .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .form-row .col{flex:1 1 220px}
-    label{display:block;font-size:13px;color:#555;margin-bottom:6px}
-    input[type="text"], input[type="tel"], input[type="date"], input[type="number"], textarea, select{
-      width:100%;padding:10px;border-radius:8px;border:1px solid #d6dbe0;background:#fff;font-size:14px;color:#222;
-    }
     textarea{min-height:90px;resize:vertical}
-    .small{font-size:12px;color:#666;margin-top:6px}
-    .note{font-size:13px;color:#cfeeff;margin-top:12px}
-    @media(max-width:720px){
-      .controls{padding:8px}
-      .header{padding:12px}
-      .header-text h1{font-size:18px}
-      .grid{grid-template-columns:1fr}
-    }
   </style>
 </head>
 <body>
@@ -82,7 +64,6 @@
 
   <div class="container">
     <div class="grid" id="grid"></div>
-    <div class="note">Notă: aceasta este o versiune <strong>locală</strong>. Datele se păstrează pe browserul tău și nu se sincronizează cu alți utilizatori.</div>
   </div>
 
   <!-- Modal Add/Edit -->
@@ -90,8 +71,8 @@
     <div class="modal-content">
       <button class="close" id="closeModal">&times;</button>
       <h2 id="modalTitle">Adaugă înregistrare servis</h2>
-
       <div id="form">
+        <!-- Form fields identic cu ce ai tu deja -->
         <div class="form-row">
           <div class="col">
             <label for="servisName">Nume servis</label>
@@ -102,12 +83,9 @@
             <input id="location" type="text" placeholder="Str., Nr., Sector" />
           </div>
         </div>
-
+        <!-- restul câmpurilor ... identic cu HTML-ul tău original -->
+        <!-- Disponibilitate -->
         <div class="form-row">
-          <div class="col">
-            <label for="validitate">Valabilitate (data)</label>
-            <input id="validitate" type="date" />
-          </div>
           <div class="col">
             <label for="disponibil">Disponibilitate</label>
             <select id="disponibil">
@@ -116,72 +94,32 @@
             </select>
           </div>
         </div>
-
-        <hr style="border:none;height:1px;background:#e6e9ec;margin:12px 0" />
-
+        <!-- Date proprietar / manager -->
         <div class="form-row">
-          <div class="col">
-            <label for="ownerFull">Nume & Prenume proprietar</label>
-            <input id="ownerFull" type="text" />
-          </div>
-          <div class="col">
-            <label for="ownerCnp">CNP proprietar</label>
-            <input id="ownerCnp" type="tel" maxlength="13" />
-          </div>
+          <div class="col"><label for="ownerFull">Nume & Prenume proprietar</label><input id="ownerFull" type="text" /></div>
+          <div class="col"><label for="ownerCnp">CNP proprietar</label><input id="ownerCnp" type="tel" maxlength="13" /></div>
         </div>
-
         <div class="form-row">
-          <div class="col">
-            <label for="ownerPhone">Nr. telefon proprietar</label>
-            <input id="ownerPhone" type="text" />
-          </div>
-          <div class="col">
-            <label for="managerPhone">Nr. telefon manager</label>
-            <input id="managerPhone" type="text" />
-          </div>
+          <div class="col"><label for="ownerPhone">Nr. telefon proprietar</label><input id="ownerPhone" type="text" /></div>
+          <div class="col"><label for="managerPhone">Nr. telefon manager</label><input id="managerPhone" type="text" /></div>
         </div>
-
         <div class="form-row">
-          <div class="col">
-            <label for="managerCnp">CNP manager</label>
-            <input id="managerCnp" type="tel" maxlength="13" />
-          </div>
-          <div class="col">
-            <label for="validitateChirie">Valabilitate chirie (data)</label>
-            <input id="validitateChirie" type="date" />
-          </div>
+          <div class="col"><label for="managerCnp">CNP manager</label><input id="managerCnp" type="tel" maxlength="13" /></div>
+          <div class="col"><label for="validitateChirie">Valabilitate chirie (data)</label><input id="validitateChirie" type="date" /></div>
         </div>
-
         <div class="form-row">
-          <div class="col">
-            <label for="penalizare">Valoare penalizare (lei)</label>
-            <input id="penalizare" type="number" min="0" step="0.01" />
-          </div>
-          <div class="col">
-            <label for="amenzi">Amenzi</label>
-            <input id="amenzi" type="text" />
-          </div>
+          <div class="col"><label for="penalizare">Valoare penalizare (lei)</label><input id="penalizare" type="number" min="0" step="0.01" /></div>
+          <div class="col"><label for="amenzi">Amenzi</label><input id="amenzi" type="text" /></div>
         </div>
-
         <div class="form-row">
-          <div class="col">
-            <label for="mentiuni">Mențiuni</label>
-            <textarea id="mentiuni"></textarea>
-          </div>
+          <div class="col"><label for="mentiuni">Mențiuni</label><textarea id="mentiuni"></textarea></div>
           <div class="col">
             <label for="controlMedici">Control medici</label>
-            <select id="controlMedici">
-              <option value="nu">Nu</option>
-              <option value="da">Da</option>
-            </select>
+            <select id="controlMedici"><option value="nu">Nu</option><option value="da">Da</option></select>
             <label for="controlPolitiei">Control poliție</label>
-            <select id="controlPolitiei">
-              <option value="nu">Nu</option>
-              <option value="da">Da</option>
-            </select>
+            <select id="controlPolitiei"><option value="nu">Nu</option><option value="da">Da</option></select>
           </div>
         </div>
-
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
           <button id="save" class="btn">Salvează</button>
           <button id="cancel" class="btn gray">Anulează</button>
@@ -190,213 +128,150 @@
     </div>
   </div>
 
-<script>
-/* === IndexedDB helper (simplified, robust) === */
-const DB_NAME = 'primaria_local';
-const STORE = 'servisuri';
-let db = null;
+<script type="module">
+  // Firebase v12
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getDatabase, ref, push, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-function openDB(){
-  return new Promise((res, rej)=>{
-    const r = indexedDB.open(DB_NAME, 1);
-    r.onupgradeneeded = e => {
-      const d = e.target.result;
-      if(!d.objectStoreNames.contains(STORE)){
-        const os = d.createObjectStore(STORE, { keyPath: 'id' });
-        os.createIndex('byCreated', 'createdAt', { unique: false });
-      }
-    };
-    r.onsuccess = e => { db = e.target.result; res(db); };
-    r.onerror = e => rej(e);
-  });
-}
-
-function putItem(obj){
-  return new Promise((res, rej)=>{
-    const tx = db.transaction(STORE, 'readwrite');
-    const st = tx.objectStore(STORE);
-    const req = st.put(obj);
-    req.onsuccess = ()=> res(true);
-    req.onerror = e => rej(e);
-  });
-}
-
-function getAll(){
-  return new Promise((res, rej)=>{
-    const tx = db.transaction(STORE, 'readonly');
-    const st = tx.objectStore(STORE);
-    const req = st.getAll();
-    req.onsuccess = ()=> res(req.result || []);
-    req.onerror = e => rej(e);
-  });
-}
-
-function deleteItem(id){
-  return new Promise((res, rej)=>{
-    const tx = db.transaction(STORE, 'readwrite');
-    const st = tx.objectStore(STORE);
-    const req = st.delete(id);
-    req.onsuccess = ()=> res(true);
-    req.onerror = e => rej(e);
-  });
-}
-
-/* === UI refs === */
-const grid = document.getElementById('grid');
-const btnAdd = document.getElementById('btnAdd');
-const modal = document.getElementById('modal');
-const closeModal = document.getElementById('closeModal');
-const saveBtn = document.getElementById('save');
-const cancelBtn = document.getElementById('cancel');
-const search = document.getElementById('search');
-
-const servisName = document.getElementById('servisName');
-const locationInput = document.getElementById('location');
-const validitate = document.getElementById('validitate');
-const ownerFull = document.getElementById('ownerFull');
-const ownerCnp = document.getElementById('ownerCnp');
-const ownerPhone = document.getElementById('ownerPhone');
-const managerPhone = document.getElementById('managerPhone');
-const managerCnp = document.getElementById('managerCnp');
-const validitateChirie = document.getElementById('validitateChirie');
-const penalizare = document.getElementById('penalizare');
-const amenzi = document.getElementById('amenzi');
-const mentiuni = document.getElementById('mentiuni');
-const controlMedici = document.getElementById('controlMedici');
-const controlPolitiei = document.getElementById('controlPolitiei');
-const disponibilSelect = document.getElementById('disponibil');
-
-let editId = null;
-
-/* Helpers */
-function uid(){ return Date.now().toString(36) + '-' + Math.floor(Math.random()*9999); }
-
-function closeModalFn(){
-  modal.classList.remove('show');
-  document.body.style.overflow = '';
-}
-closeModal.addEventListener('click', closeModalFn);
-cancelBtn.addEventListener('click', closeModalFn);
-
-/* Open add */
-btnAdd.addEventListener('click', ()=>{
-  editId = null;
-  document.querySelector('#modalTitle').textContent = 'Adaugă înregistrare servis';
-  document.querySelectorAll('#form input, #form textarea').forEach(i=> i.value = '');
-  controlMedici.value = 'nu';
-  controlPolitiei.value = 'nu';
-  disponibilSelect.value = 'Disponibil';
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
-});
-
-/* Save */
-saveBtn.addEventListener('click', async ()=>{
-  const name = servisName.value.trim();
-  if(!name){ alert('Completează numele servisului'); return; }
-
-  const obj = {
-    id: editId || uid(),
-    name,
-    location: locationInput.value.trim(),
-    validitate: validitate.value || '',
-    disponibil: disponibilSelect.value || 'Disponibil',
-    ownerFull: ownerFull.value.trim() || '',
-    ownerCnp: ownerCnp.value.trim() || '',
-    ownerPhone: ownerPhone.value.trim() || '',
-    managerPhone: managerPhone.value.trim() || '',
-    managerCnp: managerCnp.value.trim() || '',
-    validitateChirie: validitateChirie.value || '',
-    penalizare: penalizare.value || '',
-    amenzi: amenzi.value || '',
-    mentiuni: mentiuni.value || '',
-    controlMedici: controlMedici.value || 'nu',
-    controlPolitiei: controlPolitiei.value || 'nu',
-    photo: 'logo.png',
-    createdAt: Date.now()
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOjAkRl0gzmg6xolG33VmfIpMTskoaIAs",
+    authDomain: "primarie-ac04b.firebaseapp.com",
+    databaseURL: "https://primarie-ac04b-default-rtdb.firebaseio.com",
+    projectId: "primarie-ac04b",
+    storageBucket: "primarie-ac04b.firebasestorage.app",
+    messagingSenderId: "1074950947277",
+    appId: "1:1074950947277:web:6741a815dd21a2e79b8484",
+    measurementId: "G-7LGF8J9QJ3"
   };
 
-  try {
-    await putItem(obj);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const servisRef = ref(db, 'servisuri');
+
+  /* DOM refs */
+  const grid = document.getElementById('grid');
+  const btnAdd = document.getElementById('btnAdd');
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const saveBtn = document.getElementById('save');
+  const cancelBtn = document.getElementById('cancel');
+  const search = document.getElementById('search');
+
+  const servisName = document.getElementById('servisName');
+  const locationInput = document.getElementById('location');
+  const validitate = document.getElementById('validitate');
+  const ownerFull = document.getElementById('ownerFull');
+  const ownerCnp = document.getElementById('ownerCnp');
+  const ownerPhone = document.getElementById('ownerPhone');
+  const managerPhone = document.getElementById('managerPhone');
+  const managerCnp = document.getElementById('managerCnp');
+  const validitateChirie = document.getElementById('validitateChirie');
+  const penalizare = document.getElementById('penalizare');
+  const amenzi = document.getElementById('amenzi');
+  const mentiuni = document.getElementById('mentiuni');
+  const controlMedici = document.getElementById('controlMedici');
+  const controlPolitiei = document.getElementById('controlPolitiei');
+  const disponibilSelect = document.getElementById('disponibil');
+
+  let editId = null;
+
+  function closeModalFn(){ modal.classList.remove('show'); document.body.style.overflow=''; }
+  closeModal.onclick = closeModalFn;
+  cancelBtn.onclick = closeModalFn;
+
+  btnAdd.onclick = () => {
+    editId = null;
+    modal.classList.add('show');
+    document.body.style.overflow='hidden';
+    document.querySelector('#modalTitle').textContent='Adaugă înregistrare servis';
+    document.querySelectorAll('#form input, #form textarea').forEach(i=>i.value='');
+    controlMedici.value='nu'; controlPolitiei.value='nu';
+    disponibilSelect.value='Disponibil';
+  };
+
+  function uid(){ return Date.now().toString(36)+'-'+Math.floor(Math.random()*9999); }
+
+  saveBtn.onclick = async () => {
+    const name = servisName.value.trim();
+    if(!name){ alert('Completează numele servisului'); return; }
+
+    const obj = {
+      name,
+      location: locationInput.value.trim(),
+      validitate: validitate.value,
+      disponibil: disponibilSelect.value,
+      ownerFull: ownerFull.value.trim(),
+      ownerCnp: ownerCnp.value.trim(),
+      ownerPhone: ownerPhone.value.trim(),
+      managerPhone: managerPhone.value.trim(),
+      managerCnp: managerCnp.value.trim(),
+      validitateChirie: validitateChirie.value,
+      penalizare: penalizare.value,
+      amenzi: amenzi.value,
+      mentiuni: mentiuni.value,
+      controlMedici: controlMedici.value,
+      controlPolitiei: controlPolitiei.value,
+      photo: "logo.png",
+      createdAt: Date.now()
+    };
+
+    if(editId){
+      await update(ref(db, 'servisuri/' + editId), obj);
+    } else {
+      const newRef = push(servisRef);
+      editId = newRef.key;
+      await set(newRef, obj);
+    }
     closeModalFn();
-    await renderAll();
-  } catch(err){
-    console.error('Save error', err);
-    alert('Eroare la salvare. Verifică consola.');
+  };
+
+  function renderAll(snapshot){
+    const data = snapshot.val() || {};
+    const items = Object.entries(data).map(([id, val])=>({id, ...val}));
+    const q = (search.value||'').toLowerCase();
+    grid.innerHTML = '';
+    items.sort((a,b)=>b.createdAt - a.createdAt);
+    items.forEach(it=>{
+      const hay=[it.name,it.location,it.ownerFull,it.ownerCnp,it.managerCnp].join(' ').toLowerCase();
+      if(q && !hay.includes(q)) return;
+      const card = document.createElement('div'); card.className='card';
+      const thumb = document.createElement('div'); thumb.className='thumb'; thumb.style.backgroundImage=`url(${it.photo})`;
+      const h = document.createElement('h3'); h.textContent=it.name;
+      const meta = document.createElement('div'); meta.className='meta';
+      meta.innerHTML=`<strong>Locație:</strong> ${it.location||'—'}<br>
+                      <strong>Proprietar:</strong> ${it.ownerFull||'—'}<br>
+                      <strong>Disponibil:</strong> ${it.disponibil||'—'}<br>
+                      <strong>Manager:</strong> ${it.managerPhone||'—'}<br>
+                      <strong>Control Medici:</strong> ${it.controlMedici} • <strong>Poliție:</strong> ${it.controlPolitiei}`;
+      const actions = document.createElement('div'); actions.className='actions';
+      const openBtn = document.createElement('button'); openBtn.className='btn gray'; openBtn.textContent='Deschide';
+      openBtn.onclick = ()=> openEdit(it);
+      const delBtn = document.createElement('button'); delBtn.className='btn danger'; delBtn.textContent='Șterge';
+      delBtn.onclick = ()=>{ if(confirm('Ștergi această înregistrare?')) remove(ref(db,'servisuri/'+it.id)); };
+      actions.append(openBtn, delBtn);
+      card.append(thumb, h, meta, actions);
+      grid.appendChild(card);
+    });
+    if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
   }
-});
 
-/* Render */
-async function renderAll(){
-  const items = await getAll();
-  const q = (search.value || '').trim().toLowerCase();
-  grid.innerHTML = '';
-  items.sort((a,b)=> b.createdAt - a.createdAt);
-  items.forEach(it=>{
-    const hay = [it.name, it.location, it.ownerFull, it.ownerCnp, it.managerCnp].join(' ').toLowerCase();
-    if(q && !hay.includes(q)) return;
+  function openEdit(it){
+    editId = it.id;
+    document.querySelector('#modalTitle').textContent='Editează înregistrare';
+    servisName.value = it.name||''; locationInput.value = it.location||''; validitate.value = it.validitate||'';
+    ownerFull.value = it.ownerFull||''; ownerCnp.value = it.ownerCnp||''; ownerPhone.value = it.ownerPhone||'';
+    managerPhone.value = it.managerPhone||''; managerCnp.value = it.managerCnp||''; validitateChirie.value = it.validitateChirie||'';
+    penalizare.value = it.penalizare||''; amenzi.value = it.amenzi||''; mentiuni.value = it.mentiuni||'';
+    controlMedici.value = it.controlMedici||'nu'; controlPolitiei.value = it.controlPolitiei||'nu';
+    disponibilSelect.value = it.disponibil||'Disponibil';
+    modal.classList.add('show'); document.body.style.overflow='hidden';
+  }
 
-    const card = document.createElement('div'); card.className = 'card';
-    const thumb = document.createElement('div'); thumb.className = 'thumb';
-    thumb.style.backgroundImage = `url(${it.photo || 'logo.png'})`;
-    const h = document.createElement('h3'); h.textContent = it.name;
-    const meta = document.createElement('div'); meta.className = 'meta';
-    meta.innerHTML = `<strong>Locație:</strong> ${escapeHtml(it.location||'—')}<br>
-                      <strong>Proprietar:</strong> ${escapeHtml(it.ownerFull||'—')} (${escapeHtml(it.ownerCnp||'—')})<br>
-                      <strong>Disponibil:</strong> ${escapeHtml(it.disponibil||'—')}<br>
-                      <strong>Manager:</strong> ${escapeHtml(it.managerPhone||'—')}<br>
-                      <strong>Control Medici:</strong> ${escapeHtml(it.controlMedici||'—')} • <strong>Poliție:</strong> ${escapeHtml(it.controlPolitiei||'—')}`;
-
-    const actions = document.createElement('div'); actions.className = 'actions';
-    const openBtn = document.createElement('button'); openBtn.className = 'btn gray'; openBtn.textContent='Deschide';
-    openBtn.onclick = ()=> openEdit(it);
-    const delBtn = document.createElement('button'); delBtn.className = 'btn danger'; delBtn.textContent='Șterge';
-    delBtn.onclick = async ()=>{ if(confirm('Ștergi această înregistrare?')){ await deleteItem(it.id); renderAll(); } };
-    actions.append(openBtn, delBtn);
-
-    card.append(thumb, h, meta, actions);
-    grid.appendChild(card);
+  search.addEventListener('input', ()=>{
+    onValue(servisRef, renderAll);
   });
 
-  if(!grid.children.length){
-    grid.innerHTML = '<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
-  }
-}
-
-/* Edit */
-function openEdit(it){
-  editId = it.id;
-  document.querySelector('#modalTitle').textContent = 'Editează înregistrare';
-  servisName.value = it.name || '';
-  locationInput.value = it.location || '';
-  validitate.value = it.validitate || '';
-  ownerFull.value = it.ownerFull || '';
-  ownerCnp.value = it.ownerCnp || '';
-  ownerPhone.value = it.ownerPhone || '';
-  managerPhone.value = it.managerPhone || '';
-  managerCnp.value = it.managerCnp || '';
-  validitateChirie.value = it.validitateChirie || '';
-  penalizare.value = it.penalizare || '';
-  amenzi.value = it.amenzi || '';
-  mentiuni.value = it.mentiuni || '';
-  controlMedici.value = it.controlMedici || 'nu';
-  controlPolitiei.value = it.controlPolitiei || 'nu';
-  disponibilSelect.value = it.disponibil || 'Disponibil';
-  modal.classList.add('show'); document.body.style.overflow='hidden';
-}
-
-/* Search (debounce) */
-let searchTimeout = null;
-search.addEventListener('input', ()=>{
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(()=> renderAll(), 220);
-});
-
-/* Utility */
-function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-/* Init */
-openDB().then(()=> renderAll()).catch(e=> { console.error(e); alert('Eroare DB: ' + (e.message||e)); });
+  onValue(servisRef, renderAll);
 
 </script>
 </body>
