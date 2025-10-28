@@ -120,6 +120,16 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="col">
+            <label for="disponibil">Disponibilitate</label>
+            <select id="disponibil">
+              <option value="Disponibil">Disponibil</option>
+              <option value="Indisponibil">Indisponibil</option>
+            </select>
+          </div>
+        </div>
+
         <hr style="border:none;height:1px;background:#e6e9ec;margin:12px 0" />
 
         <div class="form-row">
@@ -193,156 +203,199 @@
     </div>
   </div>
 
-<script>
-const DB_NAME = 'primaria_capitalei';
-const STORE = 'servisuri';
-let db = null;
+<script type="module">
+  // Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } 
+    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-function openDB(){
-  return new Promise((res, rej)=>{
-    const r = indexedDB.open(DB_NAME,1);
-    r.onupgradeneeded = e=>{
-      const d = e.target.result;
-      if(!d.objectStoreNames.contains(STORE))
-        d.createObjectStore(STORE,{keyPath:'id'});
-    };
-    r.onsuccess = e=>{db=e.target.result;res(db);};
-    r.onerror = e=>rej(e);
-  });
-}
-function putItem(obj){
-  return new Promise((res,rej)=>{
-    const tx=db.transaction(STORE,'readwrite');const st=tx.objectStore(STORE);
-    st.put(obj).onsuccess=()=>res(true);
-  });
-}
-function getAll(){
-  return new Promise((res,rej)=>{
-    const tx=db.transaction(STORE,'readonly');const st=tx.objectStore(STORE);
-    const req=st.getAll();req.onsuccess=()=>res(req.result||[]);
-  });
-}
-function deleteItem(id){
-  return new Promise((res,rej)=>{
-    const tx=db.transaction(STORE,'readwrite');const st=tx.objectStore(STORE);
-    st.delete(id).onsuccess=()=>res(true);
-  });
-}
-
-const grid=document.getElementById('grid');
-const btnAdd=document.getElementById('btnAdd');
-const modal=document.getElementById('modal');
-const closeModal=document.getElementById('closeModal');
-const saveBtn=document.getElementById('save');
-const cancelBtn=document.getElementById('cancel');
-const search=document.getElementById('search');
-
-const servisName=document.getElementById('servisName');
-const locationInput=document.getElementById('location');
-const validitate=document.getElementById('validitate');
-const ownerFull=document.getElementById('ownerFull');
-const ownerCnp=document.getElementById('ownerCnp');
-const ownerPhone=document.getElementById('ownerPhone');
-const managerPhone=document.getElementById('managerPhone');
-const managerCnp=document.getElementById('managerCnp');
-const validitateChirie=document.getElementById('validitateChirie');
-const penalizare=document.getElementById('penalizare');
-const amenzi=document.getElementById('amenzi');
-const mentiuni=document.getElementById('mentiuni');
-const controlMedici=document.getElementById('controlMedici');
-const controlPolitiei=document.getElementById('controlPolitiei');
-
-let editId=null;
-
-function uid(){return Date.now().toString(36)+'-'+Math.floor(Math.random()*9999);}
-function closeModalFn(){modal.classList.remove('show');document.body.style.overflow='';}
-closeModal.onclick=closeModalFn;cancelBtn.onclick=closeModalFn;
-
-function openAdd(){
-  editId=null;
-  modal.classList.add('show');
-  document.body.style.overflow='hidden';
-  document.querySelector('#modalTitle').textContent='Adaugă înregistrare servis';
-  document.querySelectorAll('#form input, #form textarea').forEach(i=>i.value='');
-  controlMedici.value='nu';controlPolitiei.value='nu';
-}
-btnAdd.onclick=openAdd;
-
-saveBtn.onclick=async()=>{
-  const name=servisName.value.trim();
-  if(!name){alert('Completează numele servisului');return;}
-  const obj={
-    id:editId||uid(),
-    name,
-    location:locationInput.value.trim(),
-    validitate:validitate.value,
-    ownerFull:ownerFull.value.trim(),
-    ownerCnp:ownerCnp.value.trim(),
-    ownerPhone:ownerPhone.value.trim(),
-    managerPhone:managerPhone.value.trim(),
-    managerCnp:managerCnp.value.trim(),
-    validitateChirie:validitateChirie.value,
-    penalizare:penalizare.value,
-    amenzi:amenzi.value,
-    mentiuni:mentiuni.value,
-    controlMedici:controlMedici.value,
-    controlPolitiei:controlPolitiei.value,
-    photo:"logo.png",
-    createdAt:Date.now()
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOjAkRl0gzmg6xolG33VmfIpMTskoaIAs",
+    authDomain: "primarie-ac04b.firebaseapp.com",
+    projectId: "primarie-ac04b",
+    storageBucket: "primarie-ac04b.firebasestorage.app",
+    messagingSenderId: "1074950947277",
+    appId: "1:1074950947277:web:6741a815dd21a2e79b8484",
+    measurementId: "G-7LGF8J9QJ3"
   };
-  await putItem(obj);
-  closeModalFn();
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+  const servisCollection = collection(db, "servisuri");
+
+  // DOM
+  const grid = document.getElementById('grid');
+  const btnAdd = document.getElementById('btnAdd');
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const saveBtn = document.getElementById('save');
+  const cancelBtn = document.getElementById('cancel');
+  const search = document.getElementById('search');
+
+  const servisName = document.getElementById('servisName');
+  const locationInput = document.getElementById('location');
+  const validitate = document.getElementById('validitate');
+  const ownerFull = document.getElementById('ownerFull');
+  const ownerCnp = document.getElementById('ownerCnp');
+  const ownerPhone = document.getElementById('ownerPhone');
+  const managerPhone = document.getElementById('managerPhone');
+  const managerCnp = document.getElementById('managerCnp');
+  const validitateChirie = document.getElementById('validitateChirie');
+  const penalizare = document.getElementById('penalizare');
+  const amenzi = document.getElementById('amenzi');
+  const mentiuni = document.getElementById('mentiuni');
+  const controlMedici = document.getElementById('controlMedici');
+  const controlPolitiei = document.getElementById('controlPolitiei');
+  const disponibilSelect = document.getElementById('disponibil');
+
+  let editId = null;
+
+  function closeModalFn() {
+    modal.classList.remove('show');
+    document.body.style.overflow='';
+  }
+  closeModal.onclick = closeModalFn;
+  cancelBtn.onclick = closeModalFn;
+
+  btnAdd.onclick = () => {
+    editId = null;
+    modal.classList.add('show');
+    document.body.style.overflow='hidden';
+    document.querySelector('#modalTitle').textContent='Adaugă înregistrare servis';
+    document.querySelectorAll('#form input, #form textarea').forEach(i=>i.value='');
+    controlMedici.value='nu'; controlPolitiei.value='nu';
+    disponibilSelect.value='Disponibil';
+  };
+
+  async function addService(service){
+    await addDoc(servisCollection, service);
+  }
+
+  async function getServices(){
+    const snapshot = await getDocs(servisCollection);
+    return snapshot.docs.map(doc=>({id: doc.id, ...doc.data()}));
+  }
+
+  async function updateService(id, data){
+    const docRef = doc(db, "servisuri", id);
+    await updateDoc(docRef, data);
+  }
+
+  async function deleteService(id){
+    const docRef = doc(db, "servisuri", id);
+    await deleteDoc(docRef);
+  }
+
+  saveBtn.onclick = async () => {
+    const name = servisName.value.trim();
+    if(!name){alert('Completează numele servisului'); return;}
+    const service = {
+      name,
+      location: locationInput.value.trim(),
+      validitate: validitate.value,
+      ownerFull: ownerFull.value.trim(),
+      ownerCnp: ownerCnp.value.trim(),
+      ownerPhone: ownerPhone.value.trim(),
+      managerPhone: managerPhone.value.trim(),
+      managerCnp: managerCnp.value.trim(),
+      validitateChirie: validitateChirie.value,
+      penalizare: penalizare.value,
+      amenzi: amenzi.value,
+      mentiuni: mentiuni.value,
+      controlMedici: controlMedici.value,
+      controlPolitiei: controlPolitiei.value,
+      disponibil: disponibilSelect.value,
+      photo: "logo.png",
+      createdAt: Date.now()
+    };
+
+    if(editId){
+      await updateService(editId, service);
+    } else {
+      await addService(service);
+    }
+
+    closeModalFn();
+    renderAll();
+  };
+
+  async function renderAll(){
+    const items = await getServices();
+    const q = (search.value||'').toLowerCase();
+    grid.innerHTML='';
+    items.sort((a,b)=>b.createdAt - a.createdAt);
+
+    items.forEach(it=>{
+      const hay=[it.name,it.location,it.ownerFull,it.ownerCnp,it.managerCnp].join(' ').toLowerCase();
+      if(q && !hay.includes(q)) return;
+
+      const card = document.createElement('div');
+      card.className='card';
+      const thumb = document.createElement('div');
+      thumb.className='thumb';
+      thumb.style.backgroundImage=`url(${it.photo})`;
+
+      const h = document.createElement('h3'); h.textContent = it.name;
+      const meta = document.createElement('div');
+      meta.className='meta';
+      meta.innerHTML=`<strong>Locație:</strong> ${it.location||'—'}<br>
+                      <strong>Proprietar:</strong> ${it.ownerFull||'—'}<br>
+                      <strong>Disponibil:</strong> ${it.disponibil||'—'}<br>
+                      <strong>Manager:</strong> ${it.managerPhone||'—'}<br>
+                      <strong>Control Medici:</strong> ${it.controlMedici} • <strong>Poliție:</strong> ${it.controlPolitiei}`;
+
+      const actions = document.createElement('div');
+      actions.className='actions';
+      const openBtn = document.createElement('button');
+      openBtn.className='btn gray';
+      openBtn.textContent='Deschide';
+      openBtn.onclick = ()=>openEdit(it);
+
+      const delBtn = document.createElement('button');
+      delBtn.className='btn danger';
+      delBtn.textContent='Șterge';
+      delBtn.onclick = async ()=>{
+        if(confirm('Ștergi această înregistrare?')){
+          await deleteService(it.id);
+          renderAll();
+        }
+      };
+
+      actions.append(openBtn, delBtn);
+      card.append(thumb, h, meta, actions);
+      grid.appendChild(card);
+    });
+
+    if(!grid.children.length)
+      grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
+  }
+
+  function openEdit(it){
+    editId = it.id;
+    document.querySelector('#modalTitle').textContent='Editează înregistrare';
+    servisName.value = it.name||'';
+    locationInput.value = it.location||'';
+    validitate.value = it.validitate||'';
+    ownerFull.value = it.ownerFull||'';
+    ownerCnp.value = it.ownerCnp||'';
+    ownerPhone.value = it.ownerPhone||'';
+    managerPhone.value = it.managerPhone||'';
+    managerCnp.value = it.managerCnp||'';
+    validitateChirie.value = it.validitateChirie||'';
+    penalizare.value = it.penalizare||'';
+    amenzi.value = it.amenzi||'';
+    mentiuni.value = it.mentiuni||'';
+    controlMedici.value = it.controlMedici||'nu';
+    controlPolitiei.value = it.controlPolitiei||'nu';
+    disponibilSelect.value = it.disponibil||'Disponibil';
+    modal.classList.add('show'); document.body.style.overflow='hidden';
+  }
+
+  search.oninput = renderAll;
+
   renderAll();
-};
-
-async function renderAll(){
-  const items=await getAll();
-  const q=(search.value||'').toLowerCase();
-  grid.innerHTML='';
-  items.sort((a,b)=>b.createdAt-a.createdAt);
-  items.forEach(it=>{
-    const hay=[it.name,it.location,it.ownerFull,it.ownerCnp,it.managerCnp].join(' ').toLowerCase();
-    if(q&&!hay.includes(q))return;
-    const card=document.createElement('div');
-    card.className='card';
-    const thumb=document.createElement('div');
-    thumb.className='thumb';
-    thumb.style.backgroundImage=`url(${it.photo})`;
-    const h=document.createElement('h3');h.textContent=it.name;
-    const meta=document.createElement('div');
-    meta.className='meta';
-    meta.innerHTML=`<strong>Locație:</strong> ${it.location||'—'}<br><strong>Proprietar:</strong> ${it.ownerFull||'—'}<br><strong>Manager:</strong> ${it.managerPhone||'—'}<br><strong>Control Medici:</strong> ${it.controlMedici} • <strong>Poliție:</strong> ${it.controlPolitiei}`;
-    const actions=document.createElement('div');
-    actions.className='actions';
-    const openBtn=document.createElement('button');
-    openBtn.className='btn gray';
-    openBtn.textContent='Deschide';
-    openBtn.onclick=()=>openEdit(it);
-    const delBtn=document.createElement('button');
-    delBtn.className='btn danger';
-    delBtn.textContent='Șterge';
-    delBtn.onclick=async()=>{if(confirm('Ștergi această înregistrare?')){await deleteItem(it.id);renderAll();}};
-    actions.append(openBtn,delBtn);
-    card.append(thumb,h,meta,actions);
-    grid.appendChild(card);
-  });
-  if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
-}
-
-function openEdit(it){
-  editId=it.id;
-  document.querySelector('#modalTitle').textContent='Editează înregistrare';
-  servisName.value=it.name||'';locationInput.value=it.location||'';validitate.value=it.validitate||'';
-  ownerFull.value=it.ownerFull||'';ownerCnp.value=it.ownerCnp||'';ownerPhone.value=it.ownerPhone||'';
-  managerPhone.value=it.managerPhone||'';managerCnp.value=it.managerCnp||'';
-  validitateChirie.value=it.validitateChirie||'';penalizare.value=it.penalizare||'';amenzi.value=it.amenzi||'';mentiuni.value=it.mentiuni||'';
-  controlMedici.value=it.controlMedici||'nu';controlPolitiei.value=it.controlPolitiei||'nu';
-  modal.classList.add('show');document.body.style.overflow='hidden';
-}
-
-search.oninput=renderAll;
-
-openDB().then(renderAll);
 </script>
 </body>
 </html>
