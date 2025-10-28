@@ -1,59 +1,50 @@
-<!DOCTYPE html>
-<html lang="ro">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Primăria Capitalei — Evidență Service-uri</title>
-  <link rel="icon" href="logo.png" type="image/png">
-  <style>
-    :root{
-      --bg:#0b1622;
-      --accent:#4cc2ff;
-      --card-bg: rgba(255,255,255,0.05);
-      --modal-bg:#f3f6f8;
-      --modal-text:#222;
-      --muted:#cfeeff;
-      --danger:#ff6b6b;
-      --btn-gray:#2c3948;
-    }
-    *{box-sizing:border-box;}
-    body{
-      font-family: Inter, Arial, sans-serif;
-      background:var(--bg);
-      color:#fff;
-      margin:0;
-    }
-    .header{display:flex;align-items:center;gap:18px;padding:22px 28px}
-    .header img{width:64px;height:64px;border-radius:8px}
-    .header-text h2{margin:0;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
-    .header-text h1{margin:4px 0 0;font-size:20px;color:#fff}
-    .controls{max-width:1100px;margin:12px auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .controls input[type="search"]{flex:1 1 260px;padding:10px;border-radius:8px;border:0;background:#07111a;color:#cfeeff}
-    .controls button{background:var(--accent);color:#042231;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
-    .container{max-width:1100px;margin:12px auto;padding:0 20px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:14px}
-    .card{position:relative;background:var(--card-bg);border-radius:12px;overflow:hidden;padding:12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,0.6);}
-    .thumb{width:100%;height:160px;border-radius:8px;background:#07111a;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02);}
-    .card h3{margin:0;font-size:18px;color:#fff}
-    .meta{font-size:13px;color:#d6d6d6}
-    .tag{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
-    .actions{display:flex;gap:8px;margin-top:8px}
-    .btn{background:var(--accent);border:0;padding:8px 10px;border-radius:8px;color:#042231;cursor:pointer;transition:0.2s}
-    .btn.gray{background:var(--btn-gray);color:#fff;}
-    .btn.danger{background:var(--danger);color:#111}
-    .modal{display:none;position:fixed;inset:0;z-index:1400;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;padding:20px;overflow:auto}
-    .modal.show{display:flex}
-    .modal-content{background:var(--modal-bg);color:var(--modal-text);width:100%;max-width:920px;border-radius:12px;padding:18px;position:relative}
-    .modal-content h2{margin:0 0 12px;color:#0b3f61}
-    .close{position:absolute;right:12px;top:8px;font-size:22px;background:transparent;border:0;cursor:pointer}
-    .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .form-row .col{flex:1 1 220px}
-    label{display:block;font-size:13px;color:#555;margin-bottom:6px}
-    input[type="text"], input[type="tel"], input[type="date"], input[type="number"], textarea, select{
-      width:100%;padding:10px;border-radius:8px;border:1px solid #d6dbe0;background:#fff;font-size:14px;color:#222;
-    }
-    textarea{min-height:90px;resize:vertical}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primăria Capitalei — Evidență Service-uri</title>
+<link rel="icon" href="logo.png" type="image/png">
+<style>
+:root{
+  --bg:#0b1622; --accent:#4cc2ff; --card-bg: rgba(255,255,255,0.05);
+  --modal-bg:#f3f6f8; --modal-text:#222; --muted:#cfeeff; --danger:#ff6b6b;
+  --btn-gray:#2c3948;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:#fff;margin:0;}
+.header{display:flex;align-items:center;gap:18px;padding:22px 28px}
+.header img{width:64px;height:64px;border-radius:8px;object-fit:cover}
+.header-text h2{margin:0;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
+.header-text h1{margin:4px 0 0;font-size:20px;color:#fff}
+.controls{max-width:1100px;margin:12px auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.controls input[type="search"]{flex:1 1 260px;padding:10px;border-radius:8px;border:0;background:#07111a;color:#cfeeff}
+.controls button{background:var(--accent);color:#042231;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+.container{max-width:1100px;margin:12px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:14px}
+.card{position:relative;background:var(--card-bg);border-radius:12px;overflow:hidden;padding:12px;box-shadow:0 8px 22px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:8px}
+.thumb{width:100%;height:160px;border-radius:8px;background:#07111a;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02)}
+.card h3{margin:0;font-size:18px;color:#fff}
+.meta{font-size:13px;color:#d6d6d6}
+.tag{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
+.actions{display:flex;gap:8px;margin-top:8px}
+.btn{background:var(--accent);border:0;padding:8px 10px;border-radius:8px;color:#042231;cursor:pointer;transition:0.2s}
+.btn.gray{background:var(--btn-gray);color:#fff;}
+.btn.gray:hover{background:#3c4a5c;}
+.btn.danger{background:var(--danger);color:#111}
+.modal{display:none;position:fixed;inset:0;z-index:1400;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;padding:20px;overflow:auto}
+.modal.show{display:flex}
+.modal-content{background:var(--modal-bg);color:var(--modal-text);width:100%;max-width:920px;border-radius:12px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,0.5);position:relative}
+.modal-content h2{margin:0 0 12px;color:#0b3f61}
+.close{position:absolute;right:12px;top:8px;font-size:22px;background:transparent;border:0;cursor:pointer}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.form-row .col{flex:1 1 220px}
+label{display:block;font-size:13px;color:#555;margin-bottom:6px}
+input[type="text"], input[type="tel"], input[type="date"], input[type="number"], textarea, select{
+  width:100%;padding:10px;border-radius:8px;border:1px solid #d6dbe0;background:#fff;font-size:14px;color:#222;
+}
+textarea{min-height:90px;resize:vertical}
+.small{font-size:12px;color:#666;margin-top:6px}
+.note{font-size:13px;color:#cfeeff;margin-top:12px}
+</style>
 </head>
 <body>
 <div class="header">
@@ -65,18 +56,19 @@
 </div>
 
 <div class="controls">
-  <input id="search" type="search" placeholder="Caută..." />
+  <input id="search" type="search" placeholder="Caută după nume, proprietar, CNP, manager sau locație..." />
   <button id="btnAdd" class="btn">Adaugă înregistrare</button>
 </div>
 
 <div class="container">
   <div class="grid" id="grid"></div>
+  <div class="note">Toate datele sunt salvate în Firebase și vizibile pentru toți utilizatorii.</div>
 </div>
 
 <div id="modal" class="modal">
   <div class="modal-content">
     <button class="close" id="closeModal">&times;</button>
-    <h2 id="modalTitle">Adaugă înregistrare servis</h2>
+    <h2 id="modalTitle">Adaugă înregistrare</h2>
     <div id="form">
       <div class="form-row">
         <div class="col"><label>Nume servis</label><input id="servisName" type="text"/></div>
@@ -84,7 +76,35 @@
       </div>
       <div class="form-row">
         <div class="col"><label>Valabilitate</label><input id="validitate" type="date"/></div>
-        <div class="col"><label>Disponibilitate</label><select id="disponibil"><option>Disponibil</option><option>Indisponibil</option></select></div>
+        <div class="col"><label>Disponibilitate</label>
+          <select id="disponibil"><option value="Disponibil">Disponibil</option><option value="Indisponibil">Indisponibil</option></select>
+        </div>
+      </div>
+      <hr/>
+      <div class="form-row">
+        <div class="col"><label>Nume & Prenume proprietar</label><input id="ownerFull" type="text"/></div>
+        <div class="col"><label>CNP proprietar</label><input id="ownerCnp" type="tel"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Nr. telefon proprietar</label><input id="ownerPhone" type="text"/></div>
+        <div class="col"><label>Nr. telefon manager</label><input id="managerPhone" type="text"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>CNP manager</label><input id="managerCnp" type="tel"/></div>
+        <div class="col"><label>Valabilitate chirie</label><input id="validitateChirie" type="date"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Penalizare</label><input id="penalizare" type="number" min="0" step="0.01"/></div>
+        <div class="col"><label>Amenzi</label><input id="amenzi" type="text"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Mențiuni</label><textarea id="mentiuni"></textarea></div>
+        <div class="col">
+          <label>Control medici</label>
+          <select id="controlMedici"><option value="nu">Nu</option><option value="da">Da</option></select>
+          <label>Control poliție</label>
+          <select id="controlPolitiei"><option value="nu">Nu</option><option value="da">Da</option></select>
+        </div>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
         <button id="save" class="btn">Salvează</button>
@@ -94,9 +114,9 @@
   </div>
 </div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBOjAkRl0gzmg6xolG33VmfIpMTskoaIAs",
@@ -110,6 +130,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
 const grid = document.getElementById('grid');
 const btnAdd = document.getElementById('btnAdd');
 const modal = document.getElementById('modal');
@@ -121,89 +142,124 @@ const search = document.getElementById('search');
 const servisName = document.getElementById('servisName');
 const locationInput = document.getElementById('location');
 const validitate = document.getElementById('validitate');
+const ownerFull = document.getElementById('ownerFull');
+const ownerCnp = document.getElementById('ownerCnp');
+const ownerPhone = document.getElementById('ownerPhone');
+const managerPhone = document.getElementById('managerPhone');
+const managerCnp = document.getElementById('managerCnp');
+const validitateChirie = document.getElementById('validitateChirie');
+const penalizare = document.getElementById('penalizare');
+const amenzi = document.getElementById('amenzi');
+const mentiuni = document.getElementById('mentiuni');
+const controlMedici = document.getElementById('controlMedici');
+const controlPolitiei = document.getElementById('controlPolitiei');
 const disponibilSelect = document.getElementById('disponibil');
 
-let editId = null;
+let editKey = null;
 
-// Open modal
-btnAdd.addEventListener('click', ()=>{
-  editId = null;
-  servisName.value = '';
-  locationInput.value = '';
-  validitate.value = '';
-  disponibilSelect.value = 'Disponibil';
-  modal.classList.add('show');
-});
-
-// Close modal
-function closeModalFn(){ modal.classList.remove('show'); }
+function closeModalFn(){ modal.classList.remove('show'); document.body.style.overflow=''; }
 closeModal.addEventListener('click', closeModalFn);
 cancelBtn.addEventListener('click', closeModalFn);
 
-// Save
+btnAdd.addEventListener('click', ()=>{
+  editKey = null;
+  document.getElementById('modalTitle').textContent='Adaugă înregistrare';
+  document.querySelectorAll('#form input,#form textarea,#form select').forEach(i=>i.value='');
+  controlMedici.value='nu';
+  controlPolitiei.value='nu';
+  disponibilSelect.value='Disponibil';
+  modal.classList.add('show'); document.body.style.overflow='hidden';
+});
+
 saveBtn.addEventListener('click', ()=>{
   const name = servisName.value.trim();
   if(!name){ alert('Completează numele servisului'); return; }
+
   const obj = {
     name,
-    location: locationInput.value,
-    validitate: validitate.value,
+    location: locationInput.value.trim(),
+    validitate: validitate.value || '',
     disponibil: disponibilSelect.value,
+    ownerFull: ownerFull.value.trim(),
+    ownerCnp: ownerCnp.value.trim(),
+    ownerPhone: ownerPhone.value.trim(),
+    managerPhone: managerPhone.value.trim(),
+    managerCnp: managerCnp.value.trim(),
+    validitateChirie: validitateChirie.value || '',
+    penalizare: penalizare.value || 0,
+    amenzi: amenzi.value.trim(),
+    mentiuni: mentiuni.value.trim(),
+    controlMedici: controlMedici.value,
+    controlPolitiei: controlPolitiei.value,
+    photo: 'logo.png',
     createdAt: Date.now()
   };
-  const key = editId || db.ref('servisuri').push().key;
-  db.ref('servisuri/'+key).set(obj, err=>{
-    if(err){ alert('Eroare la salvare'); console.error(err); }
-    else{ closeModalFn(); }
-  });
+
+  if(editKey){
+    db.ref('servisuri/' + editKey).set(obj).then(()=>{ closeModalFn(); }).catch(console.error);
+  } else {
+    const newKey = db.ref('servisuri').push().key;
+    db.ref('servisuri/' + newKey).set(obj).then(()=>{ closeModalFn(); }).catch(console.error);
+  }
 });
 
-// Render
 function renderAll(snapshot){
+  grid.innerHTML='';
   const data = snapshot.val() || {};
-  grid.innerHTML = '';
-  Object.entries(data).sort((a,b)=> b[1].createdAt - a[1].createdAt).forEach(([id,item])=>{
-    const card = document.createElement('div');
-    card.className='card';
-    card.innerHTML = `
-      <div class="thumb"></div>
-      <h3>${item.name}</h3>
-      <div class="meta">
-        <strong>Locație:</strong> ${item.location || '—'}<br>
-        <strong>Valabilitate:</strong> ${item.validitate || '—'}<br>
-        <strong>Disponibil:</strong> ${item.disponibil || '—'}
-      </div>
-      <div class="actions">
-        <button class="btn gray">Editează</button>
-        <button class="btn danger">Șterge</button>
-      </div>
-    `;
-    card.querySelector('.thumb').style.background = '#07111a';
-    const [editBtn, delBtn] = card.querySelectorAll('button');
-    editBtn.addEventListener('click', ()=>{
-      editId = id;
-      servisName.value = item.name;
-      locationInput.value = item.location;
-      validitate.value = item.validitate;
-      disponibilSelect.value = item.disponibil;
-      modal.classList.add('show');
-    });
-    delBtn.addEventListener('click', ()=>{ if(confirm('Ștergi înregistrarea?')) db.ref('servisuri/'+id).remove(); });
+  const q = (search.value||'').toLowerCase();
+  Object.entries(data).sort((a,b)=>b[1].createdAt - a[1].createdAt).forEach(([key,item])=>{
+    const hay=[item.name,item.location,item.ownerFull,item.ownerCnp,item.managerCnp].join(' ').toLowerCase();
+    if(q && !hay.includes(q)) return;
+
+    const card = document.createElement('div'); card.className='card';
+    const thumb = document.createElement('div'); thumb.className='thumb';
+    thumb.style.backgroundImage=`url(${item.photo||'logo.png'})`;
+    const h = document.createElement('h3'); h.textContent=item.name;
+    const meta = document.createElement('div'); meta.className='meta';
+    meta.innerHTML=`<strong>Locație:</strong> ${item.location||'—'}<br>
+                    <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
+                    <strong>Disponibil:</strong> ${item.disponibil||'—'}<br>
+                    <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
+                    <strong>Valabilitate:</strong> ${item.validitate||'—'}<br>
+                    <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}`;
+
+    const actions = document.createElement('div'); actions.className='actions';
+    const editBtn = document.createElement('button'); editBtn.className='btn gray'; editBtn.textContent='Editează';
+    editBtn.onclick=()=>openEdit(key,item);
+    const delBtn = document.createElement('button'); delBtn.className='btn danger'; delBtn.textContent='Șterge';
+    delBtn.onclick=()=>{ if(confirm('Ștergi această înregistrare?')) db.ref('servisuri/'+key).remove(); };
+    actions.append(editBtn,delBtn);
+
+    card.append(thumb,h,meta,actions);
     grid.appendChild(card);
   });
+
+  if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
 }
 
-// Listen Firebase changes
-db.ref('servisuri').on('value', renderAll);
+function openEdit(key,item){
+  editKey = key;
+  document.getElementById('modalTitle').textContent='Editează înregistrare';
+  servisName.value=item.name||'';
+  locationInput.value=item.location||'';
+  validitate.value=item.validitate||'';
+  ownerFull.value=item.ownerFull||'';
+  ownerCnp.value=item.ownerCnp||'';
+  ownerPhone.value=item.ownerPhone||'';
+  managerPhone.value=item.managerPhone||'';
+  managerCnp.value=item.managerCnp||'';
+  validitateChirie.value=item.validitateChirie||'';
+  penalizare.value=item.penalizare||0;
+  amenzi.value=item.amenzi||'';
+  mentiuni.value=item.mentiuni||'';
+  controlMedici.value=item.controlMedici||'nu';
+  controlPolitiei.value=item.controlPolitiei||'nu';
+  disponibilSelect.value=item.disponibil||'Disponibil';
+  modal.classList.add('show'); document.body.style.overflow='hidden';
+}
 
-// Search
-search.addEventListener('input', ()=>{
-  const q = search.value.toLowerCase();
-  document.querySelectorAll('.card').forEach(card=>{
-    const text = card.querySelector('h3').innerText.toLowerCase();
-    card.style.display = text.includes(q)?'flex':'none';
-  });
-});
+search.addEventListener('input',()=>{ db.ref('servisuri').once('value').then(renderAll); });
+
+db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
-</html>
