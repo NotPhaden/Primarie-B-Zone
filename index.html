@@ -44,6 +44,9 @@ input[type="text"], input[type="tel"], input[type="number"], textarea, select{
 textarea{min-height:90px;resize:vertical}
 .small{font-size:12px;color:#666;margin-top:6px}
 .note{font-size:13px;color:#cfeeff;margin-top:12px}
+
+.highlight-label { color: var(--danger); font-weight:700; }
+.highlight-value { color: var(--danger); font-weight:700; }
 </style>
 </head>
 <body>
@@ -227,12 +230,17 @@ function renderAll(snapshot){
     const thumb = document.createElement('div'); thumb.className='thumb';
     thumb.style.backgroundImage=`url(${item.photo||'logo.png'})`;
     const h = document.createElement('h3'); h.textContent=item.name;
+
     const meta = document.createElement('div'); meta.className='meta';
+
+    const disponibilHtml = `<strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span>`;
+    const valabilitateHtml = `<strong class="highlight-label">Valabilitate:</strong> <span class="highlight-value">${formatDateForInput(item.validitate)||'—'}</span>`;
+
     meta.innerHTML=`<strong>Locație:</strong> ${item.location||'—'}<br>
                     <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
-                    <strong>Disponibil:</strong> ${item.disponibil||'—'}<br>
+                    ${disponibilHtml}<br>
                     <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
-                    <strong>Valabilitate:</strong> ${formatDateForInput(item.validitate)||'—'}<br>
+                    ${valabilitateHtml}<br>
                     <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}`;
 
     const actions = document.createElement('div'); actions.className='actions';
@@ -275,5 +283,3 @@ search.addEventListener('input',()=>{ db.ref('servisuri').once('value').then(ren
 db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
-
-
