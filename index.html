@@ -59,7 +59,7 @@ textarea{min-height:90px;resize:vertical}
 <div class="controls">
   <input id="search" type="search" placeholder="Caută după nume, proprietar, CNP, manager, locație..." />
   <select id="filterCategory">
-    <option value="">Toate categoriile</option>
+    <option disabled selected>Selectează categoria</option>
     <option>Service</option>
     <option>Benzinărie</option>
     <option>Magazin de haine</option>
@@ -236,10 +236,11 @@ function renderAll(snapshot){
   const data = snapshot.val() || {};
   const q = (search.value||'').toLowerCase();
   const cat = filterCategory.value;
+
   Object.entries(data).sort((a,b)=>b[1].createdAt - a[1].createdAt).forEach(([key,item])=>{
     const hay=[item.name,item.location,item.ownerFull,item.ownerCnp,item.managerCnp,item.categorie].join(' ').toLowerCase();
     if(q && !hay.includes(q)) return;
-    if(cat && item.categorie!==cat) return;
+    if(!cat || item.categorie !== cat) return;
 
     const card = document.createElement('div'); card.className='card';
     const thumb = document.createElement('div'); thumb.className='thumb';
@@ -247,7 +248,6 @@ function renderAll(snapshot){
     const h = document.createElement('h3'); h.textContent=item.name;
 
     const meta = document.createElement('div'); meta.className='meta';
-
     const chirieHtml = `<strong>Chirie:</strong> ${item.valoareChirie || '—'}`;
     const valabilitateHtml = `<strong class="highlight-label">Valabilitate chirie:</strong> <span class="highlight-value">${item.validitateChirie ? new Date(item.validitateChirie).toLocaleDateString('ro-RO') : '—'}</span>`;
 
