@@ -16,7 +16,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:#fff;margin:0
 .header-text h2{margin:0;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
 .header-text h1{margin:4px 0 0;font-size:20px;color:#fff}
 .controls{max-width:1100px;margin:12px auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.controls input[type="search"]{flex:1 1 260px;padding:10px;border-radius:8px;border:0;background:#07111a;color:#cfeeff}
+.controls input[type="search"], .controls select{flex:1 1 260px;padding:10px;border-radius:8px;border:0;background:#07111a;color:#cfeeff}
 .controls button{background:var(--accent);color:#042231;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
 .container{max-width:1100px;margin:12px auto;padding:0 20px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:14px}
@@ -44,7 +44,6 @@ input[type="text"], input[type="tel"], input[type="number"], textarea, select{
 textarea{min-height:90px;resize:vertical}
 .small{font-size:12px;color:#666;margin-top:6px}
 .note{font-size:13px;color:#cfeeff;margin-top:12px}
-
 .highlight-label { color: var(--danger); font-weight:700; }
 .highlight-value { color: var(--danger); font-weight:700; }
 </style>
@@ -59,7 +58,17 @@ textarea{min-height:90px;resize:vertical}
 </div>
 
 <div class="controls">
-  <input id="search" type="search" placeholder="Caută după nume, proprietar, CNP, manager sau locație..." />
+  <input id="search" type="search" placeholder="Caută după nume, proprietar, CNP, manager, locație..." />
+  <select id="filterCategory">
+    <option value="">Toate categoriile</option>
+    <option>Service</option>
+    <option>Benzinărie</option>
+    <option>Magazin de haine</option>
+    <option>Club</option>
+    <option>Frizerie</option>
+    <option>Tatuaj</option>
+    <option>Spălătorie</option>
+  </select>
   <button id="btnAdd" class="btn">Adaugă înregistrare</button>
 </div>
 
@@ -78,10 +87,24 @@ textarea{min-height:90px;resize:vertical}
         <div class="col"><label>Locație</label><input id="location" type="text"/></div>
       </div>
       <div class="form-row">
-        <div class="col"><label>Valoare chirie</label><input id="valoareChirie" type="text" placeholder="ex: 600k, 1M, 2500"/></div>
+        <div class="col"><label>Valoare chirie</label><input id="valoareChirie" type="text" placeholder="ex: 600k, 1M, 4500"/></div>
+        <div class="col"><label>Categorie</label>
+          <select id="categorie">
+            <option>Service</option>
+            <option>Benzinărie</option>
+            <option>Magazin de haine</option>
+            <option>Club</option>
+            <option>Frizerie</option>
+            <option>Tatuaj</option>
+            <option>Spălătorie</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
         <div class="col"><label>Disponibilitate</label>
           <select id="disponibil"><option value="Disponibil">Disponibil</option><option value="Indisponibil">Indisponibil</option></select>
         </div>
+        <div class="col"><label>Valabilitate chirie</label><input id="validitateChirie" type="text" placeholder="zz/ll/aaaa"/></div>
       </div>
       <hr/>
       <div class="form-row">
@@ -94,20 +117,19 @@ textarea{min-height:90px;resize:vertical}
       </div>
       <div class="form-row">
         <div class="col"><label>CNP manager</label><input id="managerCnp" type="tel"/></div>
-        <div class="col"><label>Valabilitate chirie</label><input id="validitateChirie" type="text" placeholder="zz/ll/aaaa"/></div>
-      </div>
-      <div class="form-row">
         <div class="col"><label>Penalizare</label><input id="penalizare" type="number" min="0" step="0.01"/></div>
-        <div class="col"><label>Amenzi</label><input id="amenzi" type="text"/></div>
       </div>
       <div class="form-row">
-        <div class="col"><label>Mențiuni</label><textarea id="mentiuni"></textarea></div>
+        <div class="col"><label>Amenzi</label><input id="amenzi" type="text"/></div>
         <div class="col">
           <label>Control medici</label>
           <select id="controlMedici"><option value="nu">Nu</option><option value="da">Da</option></select>
           <label>Control poliție</label>
           <select id="controlPolitiei"><option value="nu">Nu</option><option value="da">Da</option></select>
         </div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Mențiuni</label><textarea id="mentiuni"></textarea></div>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
         <button id="save" class="btn">Salvează</button>
@@ -141,16 +163,18 @@ const closeModal = document.getElementById('closeModal');
 const saveBtn = document.getElementById('save');
 const cancelBtn = document.getElementById('cancel');
 const search = document.getElementById('search');
+const filterCategory = document.getElementById('filterCategory');
 
 const servisName = document.getElementById('servisName');
 const locationInput = document.getElementById('location');
 const valoareChirie = document.getElementById('valoareChirie');
+const categorie = document.getElementById('categorie');
+const validitateChirie = document.getElementById('validitateChirie');
 const ownerFull = document.getElementById('ownerFull');
 const ownerCnp = document.getElementById('ownerCnp');
 const ownerPhone = document.getElementById('ownerPhone');
 const managerPhone = document.getElementById('managerPhone');
 const managerCnp = document.getElementById('managerCnp');
-const validitateChirie = document.getElementById('validitateChirie');
 const penalizare = document.getElementById('penalizare');
 const amenzi = document.getElementById('amenzi');
 const mentiuni = document.getElementById('mentiuni');
@@ -171,6 +195,7 @@ btnAdd.addEventListener('click', ()=>{
   controlMedici.value='nu';
   controlPolitiei.value='nu';
   disponibilSelect.value='Disponibil';
+  categorie.value='Service';
   modal.classList.add('show'); document.body.style.overflow='hidden';
 });
 
@@ -194,13 +219,14 @@ saveBtn.addEventListener('click', ()=>{
     name,
     location: locationInput.value.trim(),
     valoareChirie: valoareChirie.value.trim(),
+    categorie: categorie.value,
     disponibil: disponibilSelect.value,
+    validitateChirie: parseDateToFirebase(validitateChirie.value.trim()),
     ownerFull: ownerFull.value.trim(),
     ownerCnp: ownerCnp.value.trim(),
     ownerPhone: ownerPhone.value.trim(),
     managerPhone: managerPhone.value.trim(),
     managerCnp: managerCnp.value.trim(),
-    validitateChirie: parseDateToFirebase(validitateChirie.value.trim()),
     penalizare: penalizare.value || 0,
     amenzi: amenzi.value.trim(),
     mentiuni: mentiuni.value.trim(),
@@ -222,9 +248,11 @@ function renderAll(snapshot){
   grid.innerHTML='';
   const data = snapshot.val() || {};
   const q = (search.value||'').toLowerCase();
+  const cat = filterCategory.value;
   Object.entries(data).sort((a,b)=>b[1].createdAt - a[1].createdAt).forEach(([key,item])=>{
-    const hay=[item.name,item.location,item.ownerFull,item.ownerCnp,item.managerCnp].join(' ').toLowerCase();
+    const hay=[item.name,item.location,item.ownerFull,item.ownerCnp,item.managerCnp,item.categorie].join(' ').toLowerCase();
     if(q && !hay.includes(q)) return;
+    if(cat && item.categorie!==cat) return;
 
     const card = document.createElement('div'); card.className='card';
     const thumb = document.createElement('div'); thumb.className='thumb';
@@ -232,16 +260,15 @@ function renderAll(snapshot){
     const h = document.createElement('h3'); h.textContent=item.name;
 
     const meta = document.createElement('div'); meta.className='meta';
+    const chirieHtml = `<strong class="highlight-label">Chirie:</strong> <span class="highlight-value">${item.valoareChirie || '—'}</span>`;
 
-    const disponibilHtml = `<strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span>`;
-    const chirieHtml = `<strong class="highlight-label">Chirie:</strong> <span class="highlight-value">${item.valoareChirie || '—'} lei</span>`;
-
-    meta.innerHTML=`<strong>Locație:</strong> ${item.location||'—'}<br>
+    meta.innerHTML=`<strong>Categorie:</strong> ${item.categorie||'—'}<br>
+                    <strong>Locație:</strong> ${item.location||'—'}<br>
                     <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
-                    ${disponibilHtml}<br>
                     <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
                     ${chirieHtml}<br>
                     <strong>Valabilitate chirie:</strong> ${formatDateForInput(item.validitateChirie)||'—'}<br>
+                    <strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span><br>
                     <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}`;
 
     const actions = document.createElement('div'); actions.className='actions';
@@ -264,13 +291,14 @@ function openEdit(key,item){
   servisName.value=item.name||'';
   locationInput.value=item.location||'';
   valoareChirie.value=item.valoareChirie||'';
+  categorie.value=item.categorie||'Service';
+  validitateChirie.value=formatDateForInput(item.validitateChirie);
   ownerFull.value=item.ownerFull||'';
   ownerCnp.value=item.ownerCnp||'';
   ownerPhone.value=item.ownerPhone||'';
   managerPhone.value=item.managerPhone||'';
   managerCnp.value=item.managerCnp||'';
-  validitateChirie.value=formatDateForInput(item.validitateChirie);
-  penalizare.value=item.penalizare||0;
+  penalizare.value=item.penalizare||'';
   amenzi.value=item.amenzi||'';
   mentiuni.value=item.mentiuni||'';
   controlMedici.value=item.controlMedici||'nu';
@@ -279,8 +307,8 @@ function openEdit(key,item){
   modal.classList.add('show'); document.body.style.overflow='hidden';
 }
 
-search.addEventListener('input',()=>{ db.ref('servisuri').once('value').then(renderAll); });
-
+search.addEventListener('input',()=>{ db.ref('servisuri').once('value',renderAll); });
+filterCategory.addEventListener('change',()=>{ db.ref('servisuri').once('value',renderAll); });
 db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
