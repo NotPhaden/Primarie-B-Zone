@@ -75,7 +75,6 @@ textarea{min-height:90px;resize:vertical}
 
 <div class="container">
   <div class="grid" id="grid"></div>
-  <div class="note">Alege Categoria</div>
 </div>
 
 <div id="modal" class="modal">
@@ -307,6 +306,7 @@ filterCategory.addEventListener('change',()=>{ db.ref('servisuri').once('value',
 db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
+
 
 
 
