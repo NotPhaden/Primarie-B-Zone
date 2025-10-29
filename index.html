@@ -84,7 +84,7 @@ textarea{min-height:90px;resize:vertical}
     <h2 id="modalTitle">Adaugă înregistrare</h2>
     <div id="form">
       <div class="form-row">
-        <div class="col"><label>Nume servis</label><input id="servisName" type="text"/></div>
+        <div class="col"><label>Nume Proprietate</label><input id="servisName" type="text"/></div>
         <div class="col"><label>Locație</label><input id="location" type="text"/></div>
       </div>
       <div class="form-row">
@@ -307,4 +307,5 @@ filterCategory.addEventListener('change',()=>{ db.ref('servisuri').once('value',
 db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
+
 
