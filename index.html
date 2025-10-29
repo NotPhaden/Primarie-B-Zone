@@ -82,11 +82,11 @@ textarea{min-height:90px;resize:vertical}
     <h2 id="modalTitle">Adaugă înregistrare</h2>
     <div id="form">
       <div class="form-row">
-        <div class="col"><label>Nume Proprietate</label><input id="servisName" type="text"/></div>
+        <div class="col"><label>Nume servis</label><input id="servisName" type="text"/></div>
         <div class="col"><label>Locație</label><input id="location" type="text"/></div>
       </div>
       <div class="form-row">
-        <div class="col"><label>Valoare chirie</label><input id="valoareChirie" type="text" placeholder="ex: 600, 1000, 4500"/></div>
+        <div class="col"><label>Valoare chirie</label><input id="valoareChirie" type="text" placeholder="ex: 600k, 1M, 4500"/></div>
         <div class="col"><label>Categorie</label>
           <select id="categorie">
             <option>Service</option>
@@ -200,12 +200,12 @@ btnAdd.addEventListener('click', ()=>{
 
 saveBtn.addEventListener('click', ()=>{
   const name = servisName.value.trim();
-  if(!name){ alert('Completează numele proprietății'); return; }
+  if(!name){ alert('Completează numele servisului'); return; }
 
   const obj = {
     name,
     location: locationInput.value.trim(),
-    valoareChirie: parseFloat(valoareChirie.value) || 0,
+    valoareChirie: valoareChirie.value.trim(),
     categorie: categorie.value,
     disponibil: disponibilSelect.value,
     validitateChirie: validitateChirie.value, 
@@ -231,58 +231,46 @@ saveBtn.addEventListener('click', ()=>{
   }
 });
 
-// Functie de renderizare cu numerotare si sortare dupa valoareChirie
 function renderAll(snapshot){
   grid.innerHTML='';
   const data = snapshot.val() || {};
   const q = (search.value||'').toLowerCase();
-  const catFilter = filterCategory.value;
+  const cat = filterCategory.value;
 
-  // Grupare pe categorii
-  const categories = {};
-  Object.entries(data).forEach(([key,item])=>{
+  Object.entries(data).sort((a,b)=>b[1].createdAt - a[1].createdAt).forEach(([key,item])=>{
     const hay=[item.name,item.location,item.ownerFull,item.ownerCnp,item.managerCnp,item.categorie].join(' ').toLowerCase();
     if(q && !hay.includes(q)) return;
-    if(catFilter && item.categorie !== catFilter) return;
-    if(!categories[item.categorie]) categories[item.categorie]=[];
-    categories[item.categorie].push({...item,key});
-  });
+    if(!cat || item.categorie !== cat) return;
 
-  Object.entries(categories).forEach(([cat,items])=>{
-    // sortare crescatoare dupa valoareChirie
-    items.sort((a,b)=> (parseFloat(a.valoareChirie)||0) - (parseFloat(b.valoareChirie)||0) );
+    const card = document.createElement('div'); card.className='card';
+    const thumb = document.createElement('div'); thumb.className='thumb';
+    thumb.style.backgroundImage=`url(${item.photo||'logo.png'})`;
+    const h = document.createElement('h3'); h.textContent=item.name;
 
-    items.forEach((item,index)=>{
-      const card = document.createElement('div'); card.className='card';
-      const thumb = document.createElement('div'); thumb.className='thumb';
-      thumb.style.backgroundImage=`url(${item.photo||'logo.png'})`;
-      const h = document.createElement('h3'); h.textContent=`${index+1}/${items.length} • ${item.name}`;
+    const meta = document.createElement('div'); meta.className='meta';
+    const chirieHtml = `<strong>Chirie:</strong> ${item.valoareChirie || '—'}`;
+    const valabilitateHtml = `<strong class="highlight-label">Valabilitate chirie:</strong> <span class="highlight-value">${item.validitateChirie ? new Date(item.validitateChirie).toLocaleDateString('ro-RO') : '—'}</span>`;
 
-      const meta = document.createElement('div'); meta.className='meta';
-      const chirieHtml = `<strong>Chirie:</strong> ${item.valoareChirie || '—'}`;
-      const valabilitateHtml = `<strong class="highlight-label">Valabilitate chirie:</strong> <span class="highlight-value">${item.validitateChirie ? new Date(item.validitateChirie).toLocaleDateString('ro-RO') : '—'}</span>`;
+    meta.innerHTML = `
+      <strong>Categorie:</strong> ${item.categorie||'—'}<br>
+      <strong>Locație:</strong> ${item.location||'—'}<br>
+      <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
+      <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
+      ${chirieHtml}<br>
+      ${valabilitateHtml}<br>
+      <strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span><br>
+      <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}
+    `;
 
-      meta.innerHTML = `
-        <strong>Categorie:</strong> ${item.categorie||'—'}<br>
-        <strong>Locație:</strong> ${item.location||'—'}<br>
-        <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
-        <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
-        ${chirieHtml}<br>
-        ${valabilitateHtml}<br>
-        <strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span><br>
-        <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}
-      `;
+    const actions = document.createElement('div'); actions.className='actions';
+    const editBtn = document.createElement('button'); editBtn.className='btn gray'; editBtn.textContent='Editează';
+    editBtn.onclick=()=>openEdit(key,item);
+    const delBtn = document.createElement('button'); delBtn.className='btn danger'; delBtn.textContent='Șterge';
+    delBtn.onclick=()=>{ if(confirm('Ștergi această înregistrare?')) db.ref('servisuri/'+key).remove(); };
+    actions.append(editBtn,delBtn);
 
-      const actions = document.createElement('div'); actions.className='actions';
-      const editBtn = document.createElement('button'); editBtn.className='btn gray'; editBtn.textContent='Editează';
-      editBtn.onclick=()=>openEdit(item.key,item);
-      const delBtn = document.createElement('button'); delBtn.className='btn danger'; delBtn.textContent='Șterge';
-      delBtn.onclick=()=>{ if(confirm('Ștergi această înregistrare?')) db.ref('servisuri/'+item.key).remove(); };
-      actions.append(editBtn,delBtn);
-
-      card.append(thumb,h,meta,actions);
-      grid.appendChild(card);
-    });
+    card.append(thumb,h,meta,actions);
+    grid.appendChild(card);
   });
 
   if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
