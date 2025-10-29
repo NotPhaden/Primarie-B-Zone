@@ -78,7 +78,7 @@ textarea{min-height:90px;resize:vertical}
         <div class="col"><label>Locație</label><input id="location" type="text"/></div>
       </div>
       <div class="form-row">
-        <div class="col"><label>Valabilitate</label><input id="validitate" type="text" placeholder="zz/ll/aaaa"/></div>
+        <div class="col"><label>Valoare chirie (lei)</label><input id="valoareChirie" type="number" min="0" step="0.01" placeholder="0.00"/></div>
         <div class="col"><label>Disponibilitate</label>
           <select id="disponibil"><option value="Disponibil">Disponibil</option><option value="Indisponibil">Indisponibil</option></select>
         </div>
@@ -144,7 +144,7 @@ const search = document.getElementById('search');
 
 const servisName = document.getElementById('servisName');
 const locationInput = document.getElementById('location');
-const validitate = document.getElementById('validitate');
+const valoareChirie = document.getElementById('valoareChirie');
 const ownerFull = document.getElementById('ownerFull');
 const ownerCnp = document.getElementById('ownerCnp');
 const ownerPhone = document.getElementById('ownerPhone');
@@ -193,7 +193,7 @@ saveBtn.addEventListener('click', ()=>{
   const obj = {
     name,
     location: locationInput.value.trim(),
-    validitate: parseDateToFirebase(validitate.value.trim()),
+    valoareChirie: parseFloat(valoareChirie.value) || 0,
     disponibil: disponibilSelect.value,
     ownerFull: ownerFull.value.trim(),
     ownerCnp: ownerCnp.value.trim(),
@@ -234,13 +234,14 @@ function renderAll(snapshot){
     const meta = document.createElement('div'); meta.className='meta';
 
     const disponibilHtml = `<strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span>`;
-    const valabilitateHtml = `<strong class="highlight-label">Valabilitate:</strong> <span class="highlight-value">${formatDateForInput(item.validitate)||'—'}</span>`;
+    const chirieHtml = `<strong class="highlight-label">Chirie:</strong> <span class="highlight-value">${item.valoareChirie || '—'} lei</span>`;
 
     meta.innerHTML=`<strong>Locație:</strong> ${item.location||'—'}<br>
                     <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
                     ${disponibilHtml}<br>
                     <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
-                    ${valabilitateHtml}<br>
+                    ${chirieHtml}<br>
+                    <strong>Valabilitate chirie:</strong> ${formatDateForInput(item.validitateChirie)||'—'}<br>
                     <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}`;
 
     const actions = document.createElement('div'); actions.className='actions';
@@ -262,7 +263,7 @@ function openEdit(key,item){
   document.getElementById('modalTitle').textContent='Editează înregistrare';
   servisName.value=item.name||'';
   locationInput.value=item.location||'';
-  validitate.value=formatDateForInput(item.validitate);
+  valoareChirie.value=item.valoareChirie||0;
   ownerFull.value=item.ownerFull||'';
   ownerCnp.value=item.ownerCnp||'';
   ownerPhone.value=item.ownerPhone||'';
