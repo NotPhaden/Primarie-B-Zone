@@ -38,7 +38,7 @@ body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:#fff;margin:0
 .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .form-row .col{flex:1 1 220px}
 label{display:block;font-size:13px;color:#555;margin-bottom:6px}
-input[type="text"], input[type="tel"], input[type="number"], textarea, select{
+input[type="text"], input[type="tel"], input[type="number"], input[type="date"], textarea, select{
   width:100%;padding:10px;border-radius:8px;border:1px solid #d6dbe0;background:#fff;font-size:14px;color:#222;
 }
 textarea{min-height:90px;resize:vertical}
@@ -104,7 +104,7 @@ textarea{min-height:90px;resize:vertical}
         <div class="col"><label>Disponibilitate</label>
           <select id="disponibil"><option value="Disponibil">Disponibil</option><option value="Indisponibil">Indisponibil</option></select>
         </div>
-        <div class="col"><label>Valabilitate chirie</label><input id="validitateChirie" type="text" placeholder="zz/ll/aaaa"/></div>
+        <div class="col"><label>Valabilitate chirie</label><input id="validitateChirie" type="date"/></div>
       </div>
       <hr/>
       <div class="form-row">
@@ -199,18 +199,6 @@ btnAdd.addEventListener('click', ()=>{
   modal.classList.add('show'); document.body.style.overflow='hidden';
 });
 
-function parseDateToFirebase(str){
-  const parts = str.split('/');
-  if(parts.length===3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
-  return '';
-}
-function formatDateForInput(str){
-  if(!str) return '';
-  const parts = str.split('-');
-  if(parts.length===3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  return '';
-}
-
 saveBtn.addEventListener('click', ()=>{
   const name = servisName.value.trim();
   if(!name){ alert('Completează numele servisului'); return; }
@@ -221,7 +209,7 @@ saveBtn.addEventListener('click', ()=>{
     valoareChirie: valoareChirie.value.trim(),
     categorie: categorie.value,
     disponibil: disponibilSelect.value,
-    validitateChirie: parseDateToFirebase(validitateChirie.value.trim()),
+    validitateChirie: validitateChirie.value || null,
     ownerFull: ownerFull.value.trim(),
     ownerCnp: ownerCnp.value.trim(),
     ownerPhone: ownerPhone.value.trim(),
@@ -261,13 +249,14 @@ function renderAll(snapshot){
 
     const meta = document.createElement('div'); meta.className='meta';
     const chirieHtml = `<strong class="highlight-label">Chirie:</strong> <span class="highlight-value">${item.valoareChirie || '—'}</span>`;
+    const valabilitateHtml = `<strong>Valabilitate chirie:</strong> ${item.validitateChirie ? new Date(item.validitateChirie).toLocaleDateString('ro-RO') : '—'}`;
 
     meta.innerHTML=`<strong>Categorie:</strong> ${item.categorie||'—'}<br>
                     <strong>Locație:</strong> ${item.location||'—'}<br>
                     <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
                     <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
                     ${chirieHtml}<br>
-                    <strong>Valabilitate chirie:</strong> ${formatDateForInput(item.validitateChirie)||'—'}<br>
+                    ${valabilitateHtml}<br>
                     <strong>Disponibil:</strong> <span class="highlight-value">${item.disponibil||'—'}</span><br>
                     <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}`;
 
@@ -292,7 +281,7 @@ function openEdit(key,item){
   locationInput.value=item.location||'';
   valoareChirie.value=item.valoareChirie||'';
   categorie.value=item.categorie||'Service';
-  validitateChirie.value=formatDateForInput(item.validitateChirie);
+  validitateChirie.value=item.validitateChirie||'';
   ownerFull.value=item.ownerFull||'';
   ownerCnp.value=item.ownerCnp||'';
   ownerPhone.value=item.ownerPhone||'';
