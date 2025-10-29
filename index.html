@@ -277,7 +277,7 @@ function renderAll(snapshot){
     grid.appendChild(card);
   });
 
-  if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
+  if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Alege Categoria</div>';
 }
 
 function openEdit(key,item){
@@ -307,6 +307,7 @@ filterCategory.addEventListener('change',()=>{ db.ref('servisuri').once('value',
 db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
+
 
 
 
