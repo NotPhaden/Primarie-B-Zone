@@ -68,7 +68,7 @@ textarea{min-height:90px;resize:vertical}
     <option>Tatuaj</option>
     <option>Spălătorie</option>
     <option>Bar & Cafenea</option>
-    <option>Sală</option>
+    <option>Sală & Pază</option>
   </select>
   <button id="btnAdd" class="btn">Adaugă înregistrare</button>
 </div>
@@ -307,6 +307,7 @@ filterCategory.addEventListener('change',()=>{ db.ref('servisuri').once('value',
 db.ref('servisuri').on('value',renderAll);
 </script>
 </body>
+
 
 
 
