@@ -78,7 +78,7 @@ textarea{min-height:90px;resize:vertical}
         <div class="col"><label>Locație</label><input id="location" type="text"/></div>
       </div>
       <div class="form-row">
-        <div class="col"><label>Valoare chirie (lei)</label><input id="valoareChirie" type="number" min="0" step="0.01" placeholder="0.00"/></div>
+        <div class="col"><label>Valoare chirie</label><input id="valoareChirie" type="text" placeholder="ex: 600k, 1M, 2500"/></div>
         <div class="col"><label>Disponibilitate</label>
           <select id="disponibil"><option value="Disponibil">Disponibil</option><option value="Indisponibil">Indisponibil</option></select>
         </div>
@@ -193,7 +193,7 @@ saveBtn.addEventListener('click', ()=>{
   const obj = {
     name,
     location: locationInput.value.trim(),
-    valoareChirie: parseFloat(valoareChirie.value) || 0,
+    valoareChirie: valoareChirie.value.trim(),
     disponibil: disponibilSelect.value,
     ownerFull: ownerFull.value.trim(),
     ownerCnp: ownerCnp.value.trim(),
@@ -263,7 +263,7 @@ function openEdit(key,item){
   document.getElementById('modalTitle').textContent='Editează înregistrare';
   servisName.value=item.name||'';
   locationInput.value=item.location||'';
-  valoareChirie.value=item.valoareChirie||0;
+  valoareChirie.value=item.valoareChirie||'';
   ownerFull.value=item.ownerFull||'';
   ownerCnp.value=item.ownerCnp||'';
   ownerPhone.value=item.ownerPhone||'';
