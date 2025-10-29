@@ -1,198 +1,279 @@
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SAS — Manager Echipă</title>
-  <link rel="icon" type="image/png" href="logo.png">
-  <style>
-    :root{
-      --bg:#0b1622;
-      --accent:#4cc2ff;
-      --card-bg: rgba(255,255,255,0.05);
-      --modal-bg:#ffffff;
-      --modal-text:#222;
-    }
-
-    *{box-sizing:border-box}
-    body{
-      font-family: Arial, sans-serif;
-      background:var(--bg);
-      color:#fff;
-      margin:0;
-    }
-
-    .header{display:flex;align-items:center;gap:20px;padding:30px 60px}
-    .header img{width:80px;height:80px;object-fit:cover;border-radius:8px}
-    .header-text h2{margin:0;font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
-    .header-text h1{margin:5px 0 0;font-size:32px;color:#fff}
-
-    .controls{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
-    .controls input{flex:1 1 260px;padding:10px;border-radius:8px;border:none;font-size:14px}
-    .controls button{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-size:14px;transition:background .18s}
-    .controls button:hover{background:#38a2d7}
-
-    .container{max-width:1200px;margin:20px auto;padding:0 20px}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:16px}
-
-    .card{background:var(--card-bg);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,0.6);transition:transform .22s, box-shadow .22s}
-    .card:hover{transform:translateY(-5px);box-shadow:0 10px 24px rgba(0,0,0,0.7)}
-    .card h2{margin:0 0 8px;color:var(--accent);font-size:18px}
-    .card p{margin:0;color:#d6d6d6;font-size:13px;line-height:1.4}
-
-    .add-member, .add-team{background:var(--card-bg);padding:20px;border-radius:12px;margin-top:20px}
-    .add-member h3, .add-team h3{margin-top:0;color:var(--accent)}
-    .add-member input, .add-team input, .add-team textarea{
-      width:100%;padding:10px;border-radius:8px;border:none;margin:8px 0;background:rgba(255,255,255,0.08);color:#fff;
-    }
-
-    .team-card{border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:10px;margin-bottom:10px}
-    .team-card h4{margin:0 0 6px;color:#4cc2ff}
-    .tag{display:inline-block;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,0.04);font-size:12px;color:#cfeeff;margin-right:6px}
-
-    /* 🔴 Text evidențiat */
-    .highlight-red {
-      color: #ff4444;
-      font-weight: bold;
-    }
-
-    @media(max-width:720px){
-      .header{padding:18px}
-      .header-text h1{font-size:22px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primăria Capitalei — Evidență Service-uri</title>
+<link rel="icon" href="logo.png" type="image/png">
+<style>
+:root{
+  --bg:#0b1622; --accent:#4cc2ff; --card-bg: rgba(255,255,255,0.05);
+  --modal-bg:#f3f6f8; --modal-text:#222; --muted:#cfeeff; --danger:#ff6b6b;
+  --btn-gray:#2c3948;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:#fff;margin:0;}
+.header{display:flex;align-items:center;gap:18px;padding:22px 28px}
+.header img{width:64px;height:64px;border-radius:8px;object-fit:cover}
+.header-text h2{margin:0;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:2px}
+.header-text h1{margin:4px 0 0;font-size:20px;color:#fff}
+.controls{max-width:1100px;margin:12px auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.controls input[type="search"]{flex:1 1 260px;padding:10px;border-radius:8px;border:0;background:#07111a;color:#cfeeff}
+.controls button{background:var(--accent);color:#042231;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+.container{max-width:1100px;margin:12px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:14px}
+.card{position:relative;background:var(--card-bg);border-radius:12px;overflow:hidden;padding:12px;box-shadow:0 8px 22px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:8px}
+.thumb{width:100%;height:160px;border-radius:8px;background:#07111a;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02)}
+.card h3{margin:0;font-size:18px;color:#fff}
+.meta{font-size:13px;color:#d6d6d6}
+.tag{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
+.actions{display:flex;gap:8px;margin-top:8px}
+.btn{background:var(--accent);border:0;padding:8px 10px;border-radius:8px;color:#042231;cursor:pointer;transition:0.2s}
+.btn.gray{background:var(--btn-gray);color:#fff;}
+.btn.gray:hover{background:#3c4a5c;}
+.btn.danger{background:var(--danger);color:#111}
+.modal{display:none;position:fixed;inset:0;z-index:1400;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;padding:20px;overflow:auto}
+.modal.show{display:flex}
+.modal-content{background:var(--modal-bg);color:var(--modal-text);width:100%;max-width:920px;border-radius:12px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,0.5);position:relative}
+.modal-content h2{margin:0 0 12px;color:#0b3f61}
+.close{position:absolute;right:12px;top:8px;font-size:22px;background:transparent;border:0;cursor:pointer}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.form-row .col{flex:1 1 220px}
+label{display:block;font-size:13px;color:#555;margin-bottom:6px}
+input[type="text"], input[type="tel"], input[type="number"], textarea, select{
+  width:100%;padding:10px;border-radius:8px;border:1px solid #d6dbe0;background:#fff;font-size:14px;color:#222;
+}
+textarea{min-height:90px;resize:vertical}
+.small{font-size:12px;color:#666;margin-top:6px}
+.note{font-size:13px;color:#cfeeff;margin-top:12px}
+</style>
 </head>
 <body>
-  <div class="header">
-    <img src="logo.png" alt="SAS Logo" />
-    <div class="header-text">
-      <h2>Manager Intern</h2>
-      <h1>SAS — ECHIPE & MEMBRI</h1>
+<div class="header">
+  <img src="logo.png" alt="Logo Primaria" />
+  <div class="header-text">
+    <h2>PRIMĂRIA CAPITALEI</h2>
+    <h1>Evidență Service-uri</h1>
+  </div>
+</div>
+
+<div class="controls">
+  <input id="search" type="search" placeholder="Caută după nume, proprietar, CNP, manager sau locație..." />
+  <button id="btnAdd" class="btn">Adaugă înregistrare</button>
+</div>
+
+<div class="container">
+  <div class="grid" id="grid"></div>
+  <div class="note">Toate datele sunt salvate în Firebase și vizibile pentru toți utilizatorii.</div>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="close" id="closeModal">&times;</button>
+    <h2 id="modalTitle">Adaugă înregistrare</h2>
+    <div id="form">
+      <div class="form-row">
+        <div class="col"><label>Nume servis</label><input id="servisName" type="text"/></div>
+        <div class="col"><label>Locație</label><input id="location" type="text"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Valabilitate</label><input id="validitate" type="text" placeholder="zz/ll/aaaa"/></div>
+        <div class="col"><label>Disponibilitate</label>
+          <select id="disponibil"><option value="Disponibil">Disponibil</option><option value="Indisponibil">Indisponibil</option></select>
+        </div>
+      </div>
+      <hr/>
+      <div class="form-row">
+        <div class="col"><label>Nume & Prenume proprietar</label><input id="ownerFull" type="text"/></div>
+        <div class="col"><label>CNP proprietar</label><input id="ownerCnp" type="tel"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Nr. telefon proprietar</label><input id="ownerPhone" type="text"/></div>
+        <div class="col"><label>Nr. telefon manager</label><input id="managerPhone" type="text"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>CNP manager</label><input id="managerCnp" type="tel"/></div>
+        <div class="col"><label>Valabilitate chirie</label><input id="validitateChirie" type="text" placeholder="zz/ll/aaaa"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Penalizare</label><input id="penalizare" type="number" min="0" step="0.01"/></div>
+        <div class="col"><label>Amenzi</label><input id="amenzi" type="text"/></div>
+      </div>
+      <div class="form-row">
+        <div class="col"><label>Mențiuni</label><textarea id="mentiuni"></textarea></div>
+        <div class="col">
+          <label>Control medici</label>
+          <select id="controlMedici"><option value="nu">Nu</option><option value="da">Da</option></select>
+          <label>Control poliție</label>
+          <select id="controlPolitiei"><option value="nu">Nu</option><option value="da">Da</option></select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button id="save" class="btn">Salvează</button>
+        <button id="cancel" class="btn gray">Anulează</button>
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="controls">
-    <input id="searchInput" type="text" placeholder="Caută după call-sign sau rol..." />
-    <button id="resetBtn">Reset</button>
-  </div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <div class="container">
-    <div class="add-member">
-      <h3>➕ Adaugă Membru SAS</h3>
-      <input type="text" id="callSign" placeholder="Call-sign (ex: S4)" />
-      <input type="text" id="skills" placeholder="Abilități / Rol (ex: Pilot, Marksman, Explosivist)" />
-      <button id="addMemberBtn">Adaugă Membru</button>
-    </div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBOjAkRl0gzmg6xolG33VmfIpMTskoaIAs",
+  authDomain: "primarie-ac04b.firebaseapp.com",
+  databaseURL: "https://primarie-ac04b-default-rtdb.firebaseio.com",
+  projectId: "primarie-ac04b",
+  storageBucket: "primarie-ac04b.appspot.com",
+  messagingSenderId: "1074950947277",
+  appId: "1:1074950947277:web:6741a815dd21a2e79b8484",
+  measurementId: "G-7LGF8J9QJ3"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    <div class="grid" id="memberGrid"></div>
+const grid = document.getElementById('grid');
+const btnAdd = document.getElementById('btnAdd');
+const modal = document.getElementById('modal');
+const closeModal = document.getElementById('closeModal');
+const saveBtn = document.getElementById('save');
+const cancelBtn = document.getElementById('cancel');
+const search = document.getElementById('search');
 
-    <div class="add-team">
-      <h3>🚔 Adaugă Echipă de Patrulă / Rază</h3>
-      <input type="text" id="teamName" placeholder="Nume echipă (ex: RAZIE 1, Patrula A, etc.)" />
-      <textarea id="teamMembers" rows="3" placeholder="Membri (ex: S2, S4, S6)"></textarea>
-      <button id="addTeamBtn">Adaugă Echipă</button>
-    </div>
+const servisName = document.getElementById('servisName');
+const locationInput = document.getElementById('location');
+const validitate = document.getElementById('validitate');
+const ownerFull = document.getElementById('ownerFull');
+const ownerCnp = document.getElementById('ownerCnp');
+const ownerPhone = document.getElementById('ownerPhone');
+const managerPhone = document.getElementById('managerPhone');
+const managerCnp = document.getElementById('managerCnp');
+const validitateChirie = document.getElementById('validitateChirie');
+const penalizare = document.getElementById('penalizare');
+const amenzi = document.getElementById('amenzi');
+const mentiuni = document.getElementById('mentiuni');
+const controlMedici = document.getElementById('controlMedici');
+const controlPolitiei = document.getElementById('controlPolitiei');
+const disponibilSelect = document.getElementById('disponibil');
 
-    <div id="teamList"></div>
-  </div>
+let editKey = null;
 
-  <script>
-    const memberGrid = document.getElementById('memberGrid');
-    const teamList = document.getElementById('teamList');
+function closeModalFn(){ modal.classList.remove('show'); document.body.style.overflow=''; }
+closeModal.addEventListener('click', closeModalFn);
+cancelBtn.addEventListener('click', closeModalFn);
 
-    function getData(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
-    function saveData(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
+btnAdd.addEventListener('click', ()=>{
+  editKey = null;
+  document.getElementById('modalTitle').textContent='Adaugă înregistrare';
+  document.querySelectorAll('#form input,#form textarea,#form select').forEach(i=>i.value='');
+  controlMedici.value='nu';
+  controlPolitiei.value='nu';
+  disponibilSelect.value='Disponibil';
+  modal.classList.add('show'); document.body.style.overflow='hidden';
+});
 
-    function renderMembers(){
-      const data = getData('sas_members');
-      memberGrid.innerHTML = '';
-      if(data.length===0){ memberGrid.innerHTML='<p style="opacity:0.6">Niciun membru adăugat încă.</p>'; return;}
-      data.forEach(m=>{
-        const card = document.createElement('div');
-        card.className='card';
-        card.innerHTML = `<h2>${m.call}</h2><p>${m.skills}</p>`;
-        memberGrid.appendChild(card);
-      });
-      highlightImportantText();
-    }
+function parseDateToFirebase(str){
+  const parts = str.split('/');
+  if(parts.length===3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  return '';
+}
+function formatDateForInput(str){
+  if(!str) return '';
+  const parts = str.split('-');
+  if(parts.length===3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  return '';
+}
 
-    function renderTeams(){
-      const teams = getData('sas_teams');
-      teamList.innerHTML='';
-      if(teams.length===0){ teamList.innerHTML='<p style="opacity:0.6">Nicio echipă adăugată încă.</p>'; return;}
-      teams.forEach(t=>{
-        const div=document.createElement('div');
-        div.className='team-card';
-        div.innerHTML=`<h4>${t.name}</h4><p><strong>Membri:</strong> ${t.members}</p>`;
-        teamList.appendChild(div);
-      });
-      highlightImportantText();
-    }
+saveBtn.addEventListener('click', ()=>{
+  const name = servisName.value.trim();
+  if(!name){ alert('Completează numele servisului'); return; }
 
-    document.getElementById('addMemberBtn').addEventListener('click',()=>{
-      const call = document.getElementById('callSign').value.trim();
-      const skills = document.getElementById('skills').value.trim();
-      if(!call || !skills) return alert('Completează toate câmpurile!');
-      const data=getData('sas_members');
-      data.push({call, skills});
-      saveData('sas_members', data);
-      renderMembers();
-      document.getElementById('callSign').value='';
-      document.getElementById('skills').value='';
-    });
+  const obj = {
+    name,
+    location: locationInput.value.trim(),
+    validitate: parseDateToFirebase(validitate.value.trim()),
+    disponibil: disponibilSelect.value,
+    ownerFull: ownerFull.value.trim(),
+    ownerCnp: ownerCnp.value.trim(),
+    ownerPhone: ownerPhone.value.trim(),
+    managerPhone: managerPhone.value.trim(),
+    managerCnp: managerCnp.value.trim(),
+    validitateChirie: parseDateToFirebase(validitateChirie.value.trim()),
+    penalizare: penalizare.value || 0,
+    amenzi: amenzi.value.trim(),
+    mentiuni: mentiuni.value.trim(),
+    controlMedici: controlMedici.value,
+    controlPolitiei: controlPolitiei.value,
+    photo: 'logo.png',
+    createdAt: Date.now()
+  };
 
-    document.getElementById('addTeamBtn').addEventListener('click',()=>{
-      const name=document.getElementById('teamName').value.trim();
-      const members=document.getElementById('teamMembers').value.trim();
-      if(!name || !members) return alert('Completează toate câmpurile!');
-      const teams=getData('sas_teams');
-      teams.push({name, members});
-      saveData('sas_teams', teams);
-      renderTeams();
-      document.getElementById('teamName').value='';
-      document.getElementById('teamMembers').value='';
-    });
+  if(editKey){
+    db.ref('servisuri/' + editKey).set(obj).then(()=>{ closeModalFn(); }).catch(console.error);
+  } else {
+    const newKey = db.ref('servisuri').push().key;
+    db.ref('servisuri/' + newKey).set(obj).then(()=>{ closeModalFn(); }).catch(console.error);
+  }
+});
 
-    document.getElementById('searchInput').addEventListener('input',function(){
-      const q=this.value.toLowerCase();
-      document.querySelectorAll('.card').forEach(card=>{
-        const text=card.innerText.toLowerCase();
-        card.style.display=text.includes(q)?'block':'none';
-      });
-    });
+function renderAll(snapshot){
+  grid.innerHTML='';
+  const data = snapshot.val() || {};
+  const q = (search.value||'').toLowerCase();
+  Object.entries(data).sort((a,b)=>b[1].createdAt - a[1].createdAt).forEach(([key,item])=>{
+    const hay=[item.name,item.location,item.ownerFull,item.ownerCnp,item.managerCnp].join(' ').toLowerCase();
+    if(q && !hay.includes(q)) return;
 
-    document.getElementById('resetBtn').addEventListener('click',()=>{
-      localStorage.removeItem('sas_members');
-      localStorage.removeItem('sas_teams');
-      renderMembers();
-      renderTeams();
-    });
+    const card = document.createElement('div'); card.className='card';
+    const thumb = document.createElement('div'); thumb.className='thumb';
+    thumb.style.backgroundImage=`url(${item.photo||'logo.png'})`;
+    const h = document.createElement('h3'); h.textContent=item.name;
+    const meta = document.createElement('div'); meta.className='meta';
+    meta.innerHTML=`<strong>Locație:</strong> ${item.location||'—'}<br>
+                    <strong>Proprietar:</strong> ${item.ownerFull||'—'} (${item.ownerCnp||'—'})<br>
+                    <strong>Disponibil:</strong> ${item.disponibil||'—'}<br>
+                    <strong>Manager:</strong> ${item.managerPhone||'—'}<br>
+                    <strong>Valabilitate:</strong> ${formatDateForInput(item.validitate)||'—'}<br>
+                    <strong>Control Medici:</strong> ${item.controlMedici||'—'} • <strong>Poliție:</strong> ${item.controlPolitiei||'—'}`;
 
-    /* 🔴 Evidențiere Valabilitate / Disponibil / Data */
-    function highlightImportantText() {
-      const container = document.body;
-      const regex = /(Valabilitate|Disponibil|Indisponibil|\b\d{4}-\d{2}-\d{2}\b)/gi;
+    const actions = document.createElement('div'); actions.className='actions';
+    const editBtn = document.createElement('button'); editBtn.className='btn gray'; editBtn.textContent='Editează';
+    editBtn.onclick=()=>openEdit(key,item);
+    const delBtn = document.createElement('button'); delBtn.className='btn danger'; delBtn.textContent='Șterge';
+    delBtn.onclick=()=>{ if(confirm('Ștergi această înregistrare?')) db.ref('servisuri/'+key).remove(); };
+    actions.append(editBtn,delBtn);
 
-      function wrapText(node) {
-        if (node.nodeType === 3) { // text node
-          const text = node.nodeValue;
-          const replaced = text.replace(regex, match => `<span class="highlight-red">${match}</span>`);
-          if (replaced !== text) {
-            const span = document.createElement("span");
-            span.innerHTML = replaced;
-            node.parentNode.replaceChild(span, node);
-          }
-        } else if (node.nodeType === 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
-          [...node.childNodes].forEach(wrapText);
-        }
-      }
+    card.append(thumb,h,meta,actions);
+    grid.appendChild(card);
+  });
 
-      wrapText(container);
-    }
+  if(!grid.children.length) grid.innerHTML='<div style="grid-column:1/-1;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px;color:#ccc">Nu există înregistrări</div>';
+}
 
-    window.addEventListener('DOMContentLoaded', () => {
-      renderMembers();
-      renderTeams();
-      highlightImportantText();
-    });
-  </script>
+function openEdit(key,item){
+  editKey = key;
+  document.getElementById('modalTitle').textContent='Editează înregistrare';
+  servisName.value=item.name||'';
+  locationInput.value=item.location||'';
+  validitate.value=formatDateForInput(item.validitate);
+  ownerFull.value=item.ownerFull||'';
+  ownerCnp.value=item.ownerCnp||'';
+  ownerPhone.value=item.ownerPhone||'';
+  managerPhone.value=item.managerPhone||'';
+  managerCnp.value=item.managerCnp||'';
+  validitateChirie.value=formatDateForInput(item.validitateChirie);
+  penalizare.value=item.penalizare||0;
+  amenzi.value=item.amenzi||'';
+  mentiuni.value=item.mentiuni||'';
+  controlMedici.value=item.controlMedici||'nu';
+  controlPolitiei.value=item.controlPolitiei||'nu';
+  disponibilSelect.value=item.disponibil||'Disponibil';
+  modal.classList.add('show'); document.body.style.overflow='hidden';
+}
+
+search.addEventListener('input',()=>{ db.ref('servisuri').once('value').then(renderAll); });
+
+db.ref('servisuri').on('value',renderAll);
+</script>
 </body>
+
+
